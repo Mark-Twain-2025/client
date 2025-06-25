@@ -1,4 +1,8 @@
-import "../components/sb2-bootstrap/sb-admin-2.min.css";
 export default function Home() {
-  return <div>메인페이지</div>;
+  return (
+    <div style={{ padding: "24px" }}>
+      <h1>Hello</h1>
+      <p>이곳은 홈 페이지입니다.</p>
+    </div>
+  );
 }
