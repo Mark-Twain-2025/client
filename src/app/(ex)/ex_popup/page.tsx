@@ -8,8 +8,8 @@ export default function ExamplePopup() {
 
   return (
     <div className="container mt-4">
-      {/* 팝업 모달*/}
-      {/* <PopupClient /> */}
+      {/* 팝업 모달
+      <PopupClient /> */}
       <Navbar />
     </div>
   );
