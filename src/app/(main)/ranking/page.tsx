@@ -7,13 +7,27 @@ import { Col, Tab, Tabs } from "react-bootstrap";
 export default function ExamplePopup() {
   return (
     <div>
-      <Tabs defaultActiveKey="daily" id="ranking-tabs">
-        <Tab eventKey="daily" title="일간 랭킹">
-          <DailyRank />
+      <Tabs defaultActiveKey="daily" id="ranking-tabs" fill>
+        <Tab eventKey="daily" title="일간">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <DailyRank />
+          </div>
         </Tab>
-        <Tab eventKey="weekly" title="주간 랭킹">
-          <WeeklyTop />
-          <WeeklyRank />
+        <Tab eventKey="weekly" title="주간">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <WeeklyTop />
+            <WeeklyRank />
+          </div>
         </Tab>
       </Tabs>
     </div>
