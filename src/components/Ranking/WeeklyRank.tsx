@@ -5,8 +5,15 @@ import { Card } from "react-bootstrap";
 
 export default function WeeklyRank() {
   return (
-    <div>
-      <Card style={{ width: "18rem", padding: "2rem", borderRadius: "20px" }}>
+    <div style={{ margin: "2rem" }}>
+      <Card
+        style={{
+          width: "25rem",
+          padding: "2rem",
+          borderRadius: "20px",
+          textAlign: "center",
+        }}
+      >
         <Table>
           <thead>
             <tr>
@@ -17,6 +24,18 @@ export default function WeeklyRank() {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>1</td>
+              <td>지연</td>
+              <td>2000</td>
+              <td>43%</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>지연</td>
+              <td>2000</td>
+              <td>43%</td>
+            </tr>
             <tr>
               <td>1</td>
               <td>지연</td>
