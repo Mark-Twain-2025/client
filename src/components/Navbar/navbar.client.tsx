@@ -2,26 +2,26 @@
 
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
-  { label: "Home", icon: "/Nav_home.svg" },
-  { label: "My Page", icon: "/Nav_mypage.svg" },
-  { label: "Result", icon: "/Nav_result.svg" },
-  { label: "Ranking", icon: "/Nav_ranking.svg" },
-  { label: "Quiz", icon: "/Nav_quiz.svg" },
+  { label: "Home", icon: "/Nav_home.svg", href: "/" },
+  { label: "My Page", icon: "/Nav_mypage.svg", href: "/mypage" },
+  { label: "Result", icon: "/Nav_result.svg", href: "/result" },
+  { label: "Ranking", icon: "/Nav_ranking.svg", href: "/ranking" },
+  { label: "Quiz", icon: "/Nav_quiz.svg", href: "/quiz" },
 ];
 
 export default function Navbar() {
+  const router = useRouter();
+
   return (
     <aside style={styles.sidebar}>
-      {/* 상단 컨텐츠: 로고, 유저 정보, 메뉴 */}
       <div>
-        {/* 로고 */}
         <div style={styles.header}>
           🥭 <span style={styles.logoText}>LunchCoin</span>
         </div>
 
-        {/* 유저 정보 */}
         <div style={styles.userCard}>
           <div style={styles.userInfo}>
             <Image style={styles.userImage} src="/default_bird.png" alt="user" width={25} height={25} />
@@ -30,10 +30,13 @@ export default function Navbar() {
           <div style={styles.coinText}>보유 코인 100런치</div>
         </div>
 
-        {/* 메뉴 항목 */}
         <nav style={{ ...styles.menuList, marginTop: "32px" }}>
           {menuItems.map((item) => (
-            <div key={item.label} style={styles.menuItem}>
+            <div
+              key={item.label}
+              style={styles.menuItem}
+              onClick={() => router.push(item.href)}
+            >
               <Image src={item.icon} alt={item.label} width={20} height={20} />
               <span style={styles.menuLabel}>{item.label}</span>
             </div>
@@ -41,9 +44,17 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {/* 하단 로그아웃 버튼 */}
-      <button style={styles.logout}>
+      <button
+        style={styles.logout}
+        onClick={() => router.push("/")}
+      >
         🔓 <span style={{ marginLeft: "8px" }}>Log out</span>
+      </button>
+      <button
+        style={styles.logout}
+        onClick={() => router.push("/login")}
+      >
+        🔓 <span style={{ marginLeft: "8px" }}>Log In</span>
       </button>
     </aside>
   );
@@ -86,23 +97,34 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     alignItems: "center",
     gap: "8px",
-    marginTop: "30px"
+    marginTop: "30px",
   },
   userImage: {
-    marginTop: "27px"
+    marginTop: "27px",
   },
   userName: {
     color: "#131313",
     fontSize: "14px",
     fontWeight: 600,
-    marginTop: "30px"
+    marginTop: "30px",
   },
   coinText: {
     color: "#131313",
     fontSize: "14px",
     fontWeight: 600,
     marginLeft: "35px",
-    marginTop: "10px"
+    marginTop: "10px",
+  },
+  login: {
+    display: "flex",
+    alignItems: "center",
+    background: "none",
+    border: "none",
+    color: "#D94B4B",
+    fontSize: "14px",
+    fontWeight: 600,
+    cursor: "pointer",
+    padding: "8px 0",
   },
   logout: {
     display: "flex",
@@ -131,5 +153,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontSize: "14px",
     letterSpacing: "-0.25px",
     fontWeight: 400,
+    transition: "background 0.2s",
   },
 };
