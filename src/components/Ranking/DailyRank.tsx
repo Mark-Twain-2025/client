@@ -4,8 +4,15 @@ import { Card } from "react-bootstrap";
 
 export default function DailyRank() {
   return (
-    <div>
-      <Card style={{ width: "18rem", padding: "2rem", borderRadius: "20px" }}>
+    <div style={{ margin: "2rem" }}>
+      <Card
+        style={{
+          width: "40rem",
+          padding: "2rem",
+          borderRadius: "20px",
+          textAlign: "center",
+        }}
+      >
         <Table>
           <thead>
             <tr>
@@ -16,6 +23,18 @@ export default function DailyRank() {
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>1</td>
+              <td>예경</td>
+              <td>1000</td>
+              <td>23%</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>예경</td>
+              <td>1000</td>
+              <td>23%</td>
+            </tr>
             <tr>
               <td>1</td>
               <td>예경</td>
