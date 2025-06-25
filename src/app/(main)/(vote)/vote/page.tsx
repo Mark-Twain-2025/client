@@ -79,7 +79,7 @@ export default function LunchVoting() {
                 fontSize: "1.5rem",
               }}
             >
-              <div>
+    <div>
                 <div style={{ fontSize: "2.5rem" }}>{category.emoji}</div>
                 <div>{category.name}</div>
               </div>
