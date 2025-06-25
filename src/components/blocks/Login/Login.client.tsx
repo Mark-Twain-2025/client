@@ -19,7 +19,7 @@ export default function LoginClientPage() {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('http://localhost:4000/users/login', {
+			const res = await fetch('http://localhost:3001/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
