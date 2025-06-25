@@ -44,6 +44,12 @@ export default function Navbar() {
         </nav>
       </div>
 
+ <button
+        style={styles.logout}
+        onClick={() => router.push("/signup")}
+      >
+        🔓 <span style={{ marginLeft: "8px" }}>Signup</span>
+      </button>
       <button
         style={styles.logout}
         onClick={() => router.push("/")}

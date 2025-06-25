@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function SignupClient() {
+    const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const router = useRouter();
@@ -12,20 +13,22 @@ export default function SignupClient() {
 		e.preventDefault();
 
 		try {
-			const res = await fetch('http://localhost:4000/users/signup', {
+			const res = await fetch('http://localhost:3001/signup', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ email, password }),
+                credentials: "include",
+				body: JSON.stringify({ name, email, password }),
 			});
-            
+
 			if (res.ok) {
 				alert('회원가입 성공!');
-				router.push('/');
+				router.push('/login');
 			} else {
 				const err = await res.json();
-				alert(`회원가입 실패: ${err.message}`);
+				// alert(`회원가입 실패: ${err.message}`);
+                alert(`회원가입 실패: ${err.message || err.error || JSON.stringify(err)}`);
 			}
 		} catch (error) {
 			console.error('Signup error:', error);
@@ -40,6 +43,16 @@ export default function SignupClient() {
 				onSubmit={handleSubmit}
 				className="space-y-4 border p-6 rounded shadow"
 			>
+                <div>
+					<label className="block mb-1 font-semibold">이름</label>
+					<input
+						type="text"
+						className="w-full px-4 py-2 border rounded"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						required
+					/>
+				</div>
 				<div>
 					<label className="block mb-1 font-semibold">이메일</label>
 					<input
