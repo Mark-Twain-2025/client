@@ -1,1 +1,3 @@
-export default function RenderRank() {}
+export default function RenderRank() {
+  return <div></div>;
+}
