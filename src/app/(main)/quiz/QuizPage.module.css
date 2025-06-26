@@ -1,6 +1,11 @@
 /* 예시: src/app/(main)/quiz/QuizPage.module.css */
 .container {
-  /* flex 제거 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* 세로 중앙 정렬 */
+  width: 100vw;
 }
 
 .sidebar {
@@ -10,12 +15,11 @@
 }
 
 .main {
-  margin-left: 14rem;
-  /* Navbar의 고정 너비와 맞춤 */
+  margin: 0;
+  /* 기존 margin 제거 */
   padding: 2rem 1rem;
   max-width: 800px;
-  min-height: 100vh;
-  margin-right: auto;
+  min-height: auto;
 }
 
 @media (max-width: 768px) {
