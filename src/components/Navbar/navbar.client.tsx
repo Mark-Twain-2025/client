@@ -113,6 +113,7 @@ export default function Navbar() {
                       setIsLogIn(false);
                       localStorage.removeItem('userName');
                       setOpen(false);
+                      alert("로그아웃되었습니다");
                       router.push("/");
                     }}
                   >
@@ -198,7 +199,7 @@ export default function Navbar() {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          margin-left: -15px;
+          margin-left: -20px;
         }
 
         .sidebar-brand-text {
@@ -221,6 +222,10 @@ export default function Navbar() {
           padding: 1.5rem 1rem;
           border-bottom: 1px solid #e3e6f0;
           flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
         }
 
         .sidebar-user-info {
@@ -228,6 +233,7 @@ export default function Navbar() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
         }
 
         .sidebar-user-avatar {
