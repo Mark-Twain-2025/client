@@ -1,30 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-
-interface QuizQuestion {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: number;
-  explanation: string;
-}
-
-const quizQuestions: QuizQuestion[] = [
-  {
-    id: 1,
-    question: "복리 효과에 대한 설명으로 올바른 것은?",
-    options: [
-      "원금에만 이자가 붙는 방식",
-      "원금과 이자에 모두 이자가 붙는 방식",
-      "이자율이 매년 변하는 방식",
-      "원금이 매년 증가하는 방식",
-    ],
-    correctAnswer: 1,
-    explanation:
-      "복리는 원금과 이자에 모두 이자가 붙는 방식으로, 시간이 지날수록 수익이 기하급수적으로 증가합니다.",
-  },
-];
+import { quizQuestions, QuizQuestion } from "./quizData";
 
 const LUNCH_KEY = "user_lunch";
 const QUIZ_DATE_KEY = "quiz_date";
@@ -175,13 +152,18 @@ export default function Quiz({
             </div>
             <div style={styles.explanation}>
               <h3 style={styles.explanationTitle}>
-                {isCorrect ? "✅ 정답입니다! +30 런치 지급!" : "❌ 틀렸습니다!"}
+                {isCorrect ? <>정답입니다!</> : "틀렸습니다!"}
               </h3>
               <p style={styles.explanationText}>
                 {currentQuestion.explanation}
               </p>
             </div>
             <div style={{ fontSize: 20, fontWeight: 600, marginTop: 24 }}>
+              <span style={{ color: "#FFA500", fontWeight: 700 }}>
+                +30 런치
+              </span>{" "}
+              지급!
+              <br />
               현재 보유 런치:{" "}
               <span style={{ color: "#007bff" }}>{userLunch} 런치</span>
             </div>
@@ -258,18 +240,6 @@ export default function Quiz({
               );
             })}
           </div>
-          {showExplanation && (
-            <div style={styles.explanation}>
-              <h3 style={styles.explanationTitle}>
-                {selectedAnswer === currentQuestion.correctAnswer
-                  ? "✅ 정답입니다!"
-                  : "❌ 틀렸습니다!"}
-              </h3>
-              <p style={styles.explanationText}>
-                {currentQuestion.explanation}
-              </p>
-            </div>
-          )}
           <div style={styles.buttonContainer}>
             <button
               style={{
@@ -295,7 +265,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     minHeight: "100vh",
     padding: "20px",
-    backgroundColor: "#f5f5f5",
   },
   quizCard: {
     backgroundColor: "white",
