@@ -6,7 +6,7 @@ import React from "react";
 import { Tab, Tabs } from "react-bootstrap";
 export default function RankingPage() {
   return (
-    <div>
+    <div style={{ marginTop: "2rem", marginLeft: "6rem" }}>
       <h1 className="pb-3">Ranking</h1>
       <Tabs defaultActiveKey="daily" id="ranking-tabs" fill>
         <Tab eventKey="daily" title="일간">

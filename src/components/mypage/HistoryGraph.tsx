@@ -61,13 +61,13 @@ export default function HistoryGraph() {
   return (
     <div
       style={{
-        padding: "1rem",
+        padding: "2rem",
         borderRadius: "12px",
         backgroundColor: "#F4F5F7",
         alignContent: "center",
       }}
     >
-      <div>코인 히스토리</div>
+      <h4>코인 히스토리</h4>
       <CoinHistoryChart data={[1000, 1200, 900, 1100, 1300, 1500]} />
     </div>
   );
