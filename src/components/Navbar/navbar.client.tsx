@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 
 const menuItems = [
   { label: "Home", icon: "/Nav_home.svg", href: "/" },
@@ -28,88 +29,94 @@ export default function Navbar() {
         <span className="hamburger-bar" />
         <span className="hamburger-bar" />
       </button>
-      {/* Overlay */}
-      {open && <div className="sidebar-overlay" onClick={() => setOpen(false)} />}
-      {/* Sidebar */}
-      <aside className={`sb-admin-2-sidebar sidebar-slide${open ? " open" : ""}`}>
-        {/* Brand/Logo Section */}
-        <div className="sidebar-brand">
-          <div className="sidebar-brand-group">
-            <Image src="/coin.png" alt="coin" width={32} height={32} />
-            <span className="sidebar-brand-text">
-              <span className="sidebar-brand-text-primary">Lunch</span>
-              <span className="sidebar-brand-text-secondary">Coin</span>
-            </span>
-          </div>
-        </div>
-
-        {/* User Profile Section */}
-        <div className="sidebar-user-profile">
-          <div className="sidebar-user-info">
-            <div className="sidebar-user-avatar">
-              <Image src="/default_bird.png" alt="user" width={50} height={50} />
+      {/* Overlay and Sidebar rendered in Portal */}
+      {open && typeof window !== "undefined" && createPortal(
+        <>
+          <div className="sidebar-overlay" onClick={() => setOpen(false)} />
+          <aside
+            className={`sb-admin-2-sidebar sidebar-slide open`}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Brand/Logo Section */}
+            <div className="sidebar-brand">
+              <div className="sidebar-brand-group">
+                <Image src="/coin.png" alt="coin" width={30} height={30} />
+                <span className="sidebar-brand-text">
+                  LunchCoin
+                </span>
+              </div>
             </div>
-            <div className="sidebar-user-details">
-              <div className="sidebar-user-name">User Name</div>
-              <div className="sidebar-user-coin">보유 코인: 100런치</div>
-            </div>
-          </div>
-        </div>
 
-        {/* Navigation Menu */}
-        <div className="sidebar-menu">
-          <ul className="sidebar-nav">
-            {menuItems.map((item) => (
-              <li key={item.label} className="sidebar-nav-item">
-                <a
-                  className="sidebar-nav-link"
-                  onClick={() => { setOpen(false); router.push(item.href); }}
-                  style={{ cursor: 'pointer' }}
+            {/* User Profile Section */}
+            <div className="sidebar-user-profile">
+              <div className="sidebar-user-info">
+                <div className="sidebar-user-avatar">
+                  <Image src="/default_bird.png" alt="user" width={50} height={50} />
+                </div>
+                <div className="sidebar-user-details">
+                  <div className="sidebar-user-name">User Name</div>
+                  <div className="sidebar-user-coin">보유 코인: 100런치</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Menu */}
+            <div className="sidebar-menu">
+              <ul className="sidebar-nav">
+                {menuItems.map((item) => (
+                  <li key={item.label} className="sidebar-nav-item">
+                    <a
+                      className="sidebar-nav-link"
+                      onClick={() => { setOpen(false); router.push(item.href); }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <div className="sidebar-nav-icon">
+                        <Image src={item.icon} alt={item.label} width={16} height={16} />
+                      </div>
+                      <span className="sidebar-nav-text">{item.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="sidebar-bottom">
+              {/* <div className="sidebar-divider"></div> */}
+              <div className="sidebar-actions">
+                <button
+                  className="sidebar-action-btn"
+                  onClick={() => { setOpen(false); router.push("/signup"); }}
                 >
-                  <div className="sidebar-nav-icon">
-                    <Image src={item.icon} alt={item.label} width={16} height={16} />
-                  </div>
-                  <span className="sidebar-nav-text">{item.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Bottom Actions */}
-        <div className="sidebar-bottom">
-          {/* <div className="sidebar-divider"></div> */}
-          <div className="sidebar-actions">
-            <button
-              className="sidebar-action-btn"
-              onClick={() => { setOpen(false); router.push("/signup"); }}
-            >
-              <i className="fas fa-user-plus"></i>
-              <span>Signup</span>
-            </button>
-            <button
-              className="sidebar-action-btn"
-              onClick={() => { setOpen(false); router.push("/login"); }}
-            >
-              <i className="fas fa-sign-in-alt"></i>
-              <span>Login</span>
-            </button>
-            <button
-              className="sidebar-action-btn"
-              onClick={() => { setOpen(false); router.push("/"); }}
-            >
-              <i className="fas fa-sign-out-alt"></i>
-              <span>Logout</span>
-            </button>
-          </div>
-        </div>
-      </aside>
+                  <i className="fas fa-user-plus"></i>
+                  <span>Signup</span>
+                </button>
+                <button
+                  className="sidebar-action-btn"
+                  onClick={() => { setOpen(false); router.push("/login"); }}
+                >
+                  <i className="fas fa-sign-in-alt"></i>
+                  <span>Login</span>
+                </button>
+                <button
+                  className="sidebar-action-btn"
+                  onClick={() => { setOpen(false); router.push("/"); }}
+                >
+                  <i className="fas fa-sign-out-alt"></i>
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+        </>,
+        document.body
+      )}
       <style jsx>{`
         .sidebar-hamburger {
           position: fixed;
           top: 1.2rem;
           left: 1.2rem;
-          z-index: 2001;
+          z-index: 2200;
           width: 44px;
           height: 44px;
           background: #fff;
@@ -140,30 +147,25 @@ export default function Navbar() {
           z-index: 2000;
         }
         .sb-admin-2-sidebar {
+          z-index: 2100 !important;
+          background: #fff !important;
+          box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+          opacity: 1 !important;
+          filter: none !important;
           transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-        }
-        .sidebar-slide {
-          transform: translateX(-100%);
-        }
-        .sidebar-slide.open {
-          transform: translateX(0);
-        }
-        .sb-admin-2-sidebar {
           width: 14rem;
           height: 100vh;
-          background: #fff;
           color: #131313;
           display: flex;
           flex-direction: column;
           position: fixed;
           left: 0;
           top: 0;
-          z-index: 1000;
-          box-shadow: 2px 0 8px rgba(0,0,0,0.05);
           border-radius: 0 24px 24px 0;
           overflow-y: auto;
           overflow-x: hidden;
         }
+
         .sidebar-brand {
           padding: 1.5rem 1rem;
           display: flex;
