@@ -2,9 +2,19 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/auth/Auth";
 
 export default function Main() {
   const router = useRouter();
+  const { isLogIn } = useAuth();
+
+  const handleVoteClick = () => {
+    if (!isLogIn) {
+      alert("로그인 후 이용할 수 있습니다.");
+      return;
+    }
+    router.push('/');
+  };
 
   return (
     <div className="main-bg">
@@ -17,10 +27,10 @@ export default function Main() {
         <div className="main-buttons">
           <button
             className="main-btn main-btn-primary"
-            onClick={() => router.push('/vote')}
+            onClick={handleVoteClick}
           >
             {/* <span className="icon">🍽️</span> */}
-            투표하러 가기
+            투표 하러 가기
           </button>
           <button
             className="main-btn main-btn-outline"
