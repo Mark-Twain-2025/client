@@ -5,6 +5,7 @@ import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "@/components/Navbar/navbar.client";
 import { AuthProvider } from "@/components/auth/Auth";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,9 +42,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div style={{ display: "flex", minHeight: "100vh" }}>
-          <Navbar />
           <AuthProvider>
-          <main style={{ flex: 1, padding: 0, margin: 0, width: "100%", minHeight: "100vh" }}>{children}</main>
+            <Navbar />
+            <main style={{ flex: 1, padding: 0, margin: 0, width: "100%", minHeight: "100vh" }}>{children}</main>
           </AuthProvider>
         </div>
       </body>
