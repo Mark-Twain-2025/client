@@ -1,0 +1,174 @@
+.voteContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 0px 0 32px 0;
+  background: #fff;
+  border-radius: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.foodGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  align-items: center;
+}
+
+.foodRow {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.foodCard {
+  width: 170px;
+  height: 160px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border 0.2s;
+  border: 1.5px solid #f3f3f3;
+  padding: 0;
+  outline: none;
+}
+
+.foodCard.selected {
+  border: 2.5px solid #FFB800;
+  box-shadow: 0 6px 24px rgba(255,184,0,0.18);
+}
+
+.foodImgBox {
+  width: 100%;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: #faf8f2;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.foodImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+}
+
+.foodImgPlaceholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foodLabel {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  background: none;
+}
+
+.inputRow {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.inputLabel {
+  font-size: 15px;
+  font-weight: 600;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.amountInput {
+  width: 140px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #FFB800;
+  font-size: 1rem;
+  background: #fff;
+}
+
+/* VoteItem.module.css */
+
+.centerAlignBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.lunchCount {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 6px;
+}
+
+.amountInput {
+  width: 250px;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1.5px solid #aaa;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.voteButton {
+  min-width: 140px;
+  height: 48px;
+  font-size: 15px;
+  white-space: nowrap;
+  padding: 0 28px;
+  background-color: #000;
+  color: white;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voteButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+  
