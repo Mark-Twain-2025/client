@@ -24,8 +24,9 @@ export default function RankingPage() {
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              justifyContent: "space-evenly",
               alignItems: "center",
+              marginTop: "4rem",
             }}
           >
             <WeeklyTop />
