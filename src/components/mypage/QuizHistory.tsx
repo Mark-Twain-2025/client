@@ -62,15 +62,17 @@ export default function QuizHistory() {
   return (
     <div
       style={{
-        padding: "1rem",
+        padding: "2rem",
         borderRadius: "12px",
         backgroundColor: "#fffae1",
         alignContent: "center",
       }}
     >
-      <div>퀴즈 히스토리</div>
-      <div className="grid grid-cols-2">
-        <DonutChart value={3} max={4} />
+      <h4>퀴즈 히스토리</h4>
+      <div className="grid grid-cols-[2fr_1fr]">
+        <div>
+          <DonutChart value={3} max={4} />
+        </div>
         <div className="align-middle">
           <div>연속 출석</div>
           <h3>1일</h3>
