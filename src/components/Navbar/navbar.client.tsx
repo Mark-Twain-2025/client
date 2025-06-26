@@ -24,7 +24,13 @@ export default function Navbar() {
 
         <div style={styles.userCard}>
           <div style={styles.userInfo}>
-            <Image style={styles.userImage} src="/default_bird.png" alt="user" width={25} height={25} />
+            <Image
+              style={styles.userImage}
+              src="/default_bird.png"
+              alt="user"
+              width={25}
+              height={25}
+            />
             <div style={styles.userName}>User</div>
           </div>
           <div style={styles.coinText}>보유 코인 100런치</div>
@@ -44,22 +50,13 @@ export default function Navbar() {
         </nav>
       </div>
 
- <button
-        style={styles.logout}
-        onClick={() => router.push("/signup")}
-      >
+      <button style={styles.logout} onClick={() => router.push("/signup")}>
         🔓 <span style={{ marginLeft: "8px" }}>Signup</span>
       </button>
-      <button
-        style={styles.logout}
-        onClick={() => router.push("/")}
-      >
+      <button style={styles.logout} onClick={() => router.push("/")}>
         🔓 <span style={{ marginLeft: "8px" }}>Log out</span>
       </button>
-      <button
-        style={styles.logout}
-        onClick={() => router.push("/login")}
-      >
+      <button style={styles.logout} onClick={() => router.push("/login")}>
         🔓 <span style={{ marginLeft: "8px" }}>Log In</span>
       </button>
     </aside>
