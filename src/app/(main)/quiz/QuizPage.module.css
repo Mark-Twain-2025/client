@@ -1,0 +1,27 @@
+/* 예시: src/app/(main)/quiz/QuizPage.module.css */
+.container {
+  /* flex 제거 */
+}
+
+.sidebar {
+  width: 250px;
+  min-width: 200px;
+  background: #f5f5f5;
+}
+
+.main {
+  margin-left: 14rem;
+  /* Navbar의 고정 너비와 맞춤 */
+  padding: 2rem 1rem;
+  max-width: 800px;
+  min-height: 100vh;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;
+    padding: 1rem 0.5rem;
+    max-width: 100%;
+  }
+}
