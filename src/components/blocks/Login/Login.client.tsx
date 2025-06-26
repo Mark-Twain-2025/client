@@ -3,18 +3,24 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/Auth';
+import { FaUser, FaLock } from 'react-icons/fa';
 
 export default function LoginClientPage() {
 	const router = useRouter();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { isLogIn, setIsLogIn } = useAuth();
+	const [showPassword, setShowPassword] = useState(false);
+	const { isLogIn, setIsLogIn, setUserName } = useAuth();
 
 	useEffect(() => {
-		if (isLogIn) {
+		if (isLogIn === true) {
 			router.replace('/');
 		}
-	}, [isLogIn]);
+	}, [isLogIn, router]);
+
+	if (isLogIn === undefined) {
+		return <div style={{textAlign:'center',marginTop:'4rem'}}>Loading...</div>;
+	}
 
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -29,8 +35,12 @@ export default function LoginClientPage() {
 			});
 
 			if (res.ok) {
-				alert('로그인 성공!');
+				const data = await res.json();
 				setIsLogIn(true);
+				if (data.user && data.user.name) {
+				  localStorage.setItem('userName', data.user.name);
+				  setUserName(data.user.name);
+				}
 				router.push('/');
 			} else {
 				const err = await res.json();
@@ -43,39 +53,200 @@ export default function LoginClientPage() {
 	};
 
 	return (
-		<div className="max-w-md mx-auto mt-10 px-4">
-			<h1 className="text-3xl font-bold mb-6 text-center">로그인</h1>
-			<form
-				onSubmit={handleLogin}
-				className="space-y-4 border p-6 rounded shadow"
-			>
-				<div>
-					<label className="block mb-1 font-semibold">아이디</label>
-					<input
-						type="email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						className="w-full px-4 py-2 border rounded"
-						required
-					/>
+		<div className="login-bg">
+			<div className="login-card">
+				<h1 className="login-title">Login to LunchCoin</h1>
+				<p className="login-subtitle">Use your credentials to access your account.</p>
+				<form onSubmit={handleLogin} className="login-form">
+					<div className="login-input-group">
+						<FaUser className="login-input-icon" />
+						<input
+							type="email"
+							placeholder="Enter email"
+							value={email}
+							onChange={e => setEmail(e.target.value)}
+							required
+							className="login-input"
+						/>
+					</div>
+					<div className="login-input-group">
+						<FaLock className="login-input-icon" />
+						<input
+							type={showPassword ? "text" : "password"}
+							placeholder="Password"
+							value={password}
+							onChange={e => setPassword(e.target.value)}
+							required
+							className="login-input"
+						/>
+						<span
+							className="login-eye"
+							onClick={() => setShowPassword(v => !v)}
+							style={{ cursor: 'pointer' }}
+						>
+							<svg width="22" height="22" fill="#888" viewBox="0 0 24 24">
+								<path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 12c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
+							</svg>
+						</span>
+					</div>
+					<button type="submit" className="login-btn">Login</button>
+				</form>
+				<div className="login-bottom">
+					Not registered? <a className="login-link" href="/signup">Create account</a>
 				</div>
-				<div>
-					<label className="block mb-1 font-semibold">비밀번호</label>
-					<input
-						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						className="w-full px-4 py-2 border rounded"
-						required
-					/>
-				</div>
-				<button
-					type="submit"
-					className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600"
-				>
-					로그인
-				</button>
-			</form>
+			</div>
+			<style jsx>{`
+				.login-bg {
+					min-height: 100vh;
+					background: #f6f8fb;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
+				.login-card {
+					background: #fff;
+					border-radius: 14px;
+					box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+					padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+					max-width: 400px;
+					width: 100%;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+				.login-title {
+					font-size: 2rem;
+					font-weight: 700;
+					color: #22223b;
+					margin-bottom: 0.7rem;
+					text-align: center;
+				}
+				.login-subtitle {
+					color: #6c6f80;
+					font-size: 1rem;
+					margin-bottom: 2.1rem;
+					text-align: center;
+				}
+				.login-form {
+					width: 100%;
+					display: flex;
+					flex-direction: column;
+					gap: 1.1rem;
+				}
+				.login-input-group {
+					display: flex;
+					align-items: center;
+					background: #f6f8fb;
+					border-radius: 8px;
+					padding: 0.7rem 1rem;
+					border: 1.5px solid #e3e6f0;
+					position: relative;
+				}
+				.login-input-icon {
+					color: #6c6f80;
+					font-size: 1.1rem;
+					margin-right: 0.7rem;
+				}
+				.login-input {
+					border: none;
+					background: transparent;
+					outline: none;
+					font-size: 1.08rem;
+					flex: 1;
+					padding-left: 0.5rem;
+				}
+				.login-eye {
+					position: absolute;
+					right: 1rem;
+					top: 50%;
+					transform: translateY(-50%);
+				}
+				.login-row {
+					display: flex;
+					align-items: center;
+					width: 100%;
+				}
+				.login-row-between {
+					justify-content: space-between;
+					margin-bottom: 0.2rem;
+				}
+				.login-remember {
+					display: flex;
+					align-items: center;
+					font-size: 0.98rem;
+					color: #6c6f80;
+					gap: 0.4rem;
+				}
+				.login-link {
+					color: #FFA500;
+					text-decoration: none;
+					font-weight: 500;
+					font-size: 0.98rem;
+				}
+				.login-link:hover {
+					text-decoration: underline;
+				}
+				.login-btn {
+					width: 100%;
+					background: #FFA500;
+					color: #fff;
+					font-size: 1.13rem;
+					font-weight: 600;
+					border: none;
+					border-radius: 8px;
+					padding: 0.9rem 0;
+					margin-top: 0.2rem;
+					margin-bottom: 0.7rem;
+					cursor: pointer;
+					transition: background 0.18s;
+				}
+				.login-btn:hover {
+					background: #e69400;
+				}
+				.login-or {
+					color: #6c6f80;
+					font-size: 0.98rem;
+					margin: 0.7rem 0 0.5rem 0;
+					text-align: center;
+				}
+				.login-socials {
+					display: flex;
+					gap: 0.7rem;
+					margin-bottom: 1.1rem;
+					justify-content: center;
+				}
+				.login-social-btn {
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					border: none;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					font-size: 1.25rem;
+					background: #f6f8fb;
+					color: #2563eb;
+					cursor: pointer;
+					transition: background 0.18s, color 0.18s;
+				}
+				.login-social-btn.twitter {
+					color: #1da1f2;
+				}
+				.login-social-btn.facebook {
+					color: #1877f3;
+				}
+				.login-social-btn.google {
+					color: #ea4335;
+				}
+				.login-social-btn:hover {
+					background: #e3e6f0;
+				}
+				.login-bottom {
+					color: #6c6f80;
+					font-size: 1.01rem;
+					text-align: center;
+				}
+			`}</style>
 		</div>
 	);
 }

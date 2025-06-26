@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
+import { useAuth } from "@/components/auth/Auth";
 
 const menuItems = [
   { label: "Home", icon: "/Nav_home.svg", href: "/" },
@@ -16,13 +17,14 @@ const menuItems = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const { isLogIn, setIsLogIn, userName } = useAuth();
 
   return (
     <>
       {/* Hamburger Icon */}
       <button
-        className="sidebar-hamburger"
-        onClick={() => setOpen(true)}
+        className={`sidebar-hamburger${open ? ' sidebar-hamburger-shift' : ''}`}
+        onClick={() => setOpen((prev) => !prev)}
         aria-label="Open sidebar"
       >
         <span className="hamburger-bar" />
@@ -48,17 +50,19 @@ export default function Navbar() {
             </div>
 
             {/* User Profile Section */}
-            <div className="sidebar-user-profile">
-              <div className="sidebar-user-info">
-                <div className="sidebar-user-avatar">
-                  <Image src="/default_bird.png" alt="user" width={50} height={50} />
-                </div>
-                <div className="sidebar-user-details">
-                  <div className="sidebar-user-name">User Name</div>
-                  <div className="sidebar-user-coin">보유 코인: 100런치</div>
+            {isLogIn === true && (
+              <div className="sidebar-user-profile">
+                <div className="sidebar-user-info">
+                  <div className="sidebar-user-avatar">
+                    <Image src="/default_bird.png" alt="user" width={50} height={50} />
+                  </div>
+                  <div className="sidebar-user-details">
+                    <div className="sidebar-user-name">{userName || "User Name"}</div>
+                    <div className="sidebar-user-coin">보유 코인: 100런치</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Navigation Menu */}
             <div className="sidebar-menu">
@@ -82,29 +86,40 @@ export default function Navbar() {
 
             {/* Bottom Actions */}
             <div className="sidebar-bottom">
-              {/* <div className="sidebar-divider"></div> */}
               <div className="sidebar-actions">
-                <button
-                  className="sidebar-action-btn"
-                  onClick={() => { setOpen(false); router.push("/signup"); }}
-                >
-                  <i className="fas fa-user-plus"></i>
-                  <span>Signup</span>
-                </button>
-                <button
-                  className="sidebar-action-btn"
-                  onClick={() => { setOpen(false); router.push("/login"); }}
-                >
-                  <i className="fas fa-sign-in-alt"></i>
-                  <span>Login</span>
-                </button>
-                <button
-                  className="sidebar-action-btn"
-                  onClick={() => { setOpen(false); router.push("/"); }}
-                >
-                  <i className="fas fa-sign-out-alt"></i>
-                  <span>Logout</span>
-                </button>
+                {isLogIn === false && (
+                  <>
+                    <button
+                      className="sidebar-action-btn"
+                      onClick={() => { setOpen(false); router.push("/signup"); }}
+                    >
+                      <i className="fas fa-user-plus"></i>
+                      <span>Signup</span>
+                    </button>
+                    <button
+                      className="sidebar-action-btn"
+                      onClick={() => { setOpen(false); router.push("/login"); }}
+                    >
+                      <i className="fas fa-sign-in-alt"></i>
+                      <span>Login</span>
+                    </button>
+                  </>
+                )}
+                {isLogIn === true && (
+                  <button
+                    className="sidebar-action-btn"
+                    onClick={() => {
+                      // 로그아웃 처리 (쿠키 삭제 등 필요시 추가)
+                      setIsLogIn(false);
+                      localStorage.removeItem('userName');
+                      setOpen(false);
+                      router.push("/");
+                    }}
+                  >
+                    <i className="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                  </button>
+                )}
               </div>
             </div>
           </aside>
@@ -129,6 +144,10 @@ export default function Navbar() {
           justify-content: center;
           gap: 5px;
           cursor: pointer;
+          transition: left 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        .sidebar-hamburger-shift {
+          left: 15.5rem;
         }
         .hamburger-bar {
           width: 22px;

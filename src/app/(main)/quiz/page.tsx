@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "@/components/Navbar/navbar.client";
+// import Navbar from "@/components/Navbar/navbar.client";
 import Quiz from "@/components/Quiz";
 import styles from "./QuizPage.module.css";
 

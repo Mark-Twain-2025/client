@@ -7,23 +7,23 @@ export default function Main() {
   const router = useRouter();
 
   return (
-    <div className="hero-bg">
-      <div className="hero-content">
-        <div className="hero-icon">
+    <div className="main-bg">
+      <div className="main-content">
+        <div className="main-icon">
           <Image src="/coin_no_bg.png" alt="coin" width={90} height={90} />
         </div>
         <h1>LunchCoin</h1>
-        <p className="subtitle">점심 투표 서비스, LunchCoin에 오신 것을 환영합니다!</p>
-        <div className="hero-buttons">
+        <p className="subtitle">점심 메뉴 기반 투자 서비스, LunchCoin에 오신 것을 환영합니다!</p>
+        <div className="main-buttons">
           <button
-            className="hero-btn hero-btn-primary"
+            className="main-btn main-btn-primary"
             onClick={() => router.push('/vote')}
           >
             {/* <span className="icon">🍽️</span> */}
             투표하러 가기
           </button>
           <button
-            className="hero-btn hero-btn-outline"
+            className="main-btn main-btn-outline"
             onClick={() => router.push('/vote')}
           >
             {/* <span className="icon">📊</span> */}
@@ -56,7 +56,7 @@ export default function Main() {
       </div>
       */}
       <svg
-        className="hero-wave"
+        className="main-wave"
         viewBox="0 0 1500 150"
         preserveAspectRatio="none"
       >
@@ -69,7 +69,7 @@ export default function Main() {
         />
       </svg>
       <style jsx>{`
-        .hero-bg {
+        .main-bg {
           background: #FFA500;
           min-height: 90vh;
           width: 100vw;
@@ -78,14 +78,14 @@ export default function Main() {
           justify-content: center;
           position: relative;
         }
-        .hero-content {
+        .main-content {
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           text-align: center;
         }
-        .hero-icon {
+        .main-icon {
           margin-bottom: 2.5rem;
         }
         h1 {
@@ -100,11 +100,11 @@ export default function Main() {
           font-weight: 400;
           margin-bottom: 2.2rem;
         }
-        .hero-buttons {
+        .main-buttons {
           display: flex;
           gap: 1.2rem;
         }
-        .hero-btn {
+        .main-btn {
           padding: 1rem 2.2rem;
           font-size: 1.1rem;
           border-radius: 2rem;
@@ -113,24 +113,24 @@ export default function Main() {
           cursor: pointer;
           transition: background 0.2s, color 0.2s, border 0.2s;
         }
-        .hero-btn-primary {
+        .main-btn-primary {
           background: #fff;
           color: #FFA500;
         }
-        .hero-btn-primary:hover {
+        .main-btn-primary:hover {
           background: #ffe0a3;
           color: #FFA500;
         }
-        .hero-btn-outline {
+        .main-btn-outline {
           background: transparent;
           color: #fff;
           border: 2px solid #fff;
         }
-        .hero-btn-outline:hover {
+        .main-btn-outline:hover {
           background: #fff;
           color: #FFA500;
         }
-        .hero-wave {
+        .main-wave {
           position: absolute;
           left: 0;
           bottom: 0;
