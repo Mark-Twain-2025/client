@@ -97,7 +97,7 @@ export default function Main() {
         .subtitle {
           color: #fff;
           font-size: 1.5rem;
-          font-weight: 400;
+          font-weight: 500;
           margin-bottom: 2.2rem;
         }
         .main-buttons {
