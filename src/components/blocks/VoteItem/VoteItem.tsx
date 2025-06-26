@@ -1,0 +1,10 @@
+import VoteItemClient from './VoteItem.client';
+
+interface VoteItemProps {
+	lunchCount: number;
+	onVote?: (vote: { type: string; amount: number }) => void;
+}
+
+export default function VoteItem(props: VoteItemProps) {
+	return <VoteItemClient {...props} />;
+}
