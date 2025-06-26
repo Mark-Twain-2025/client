@@ -164,7 +164,6 @@ export default function Navbar() {
           overflow-y: auto;
           overflow-x: hidden;
         }
-
         .sidebar-brand {
           padding: 1.5rem 1rem;
           display: flex;

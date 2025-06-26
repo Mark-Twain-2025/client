@@ -42,21 +42,3 @@ export function SplitButton({
     </a>
   );
 }
-
-export function BrandButton({
-  brand = "google",
-  icon,
-  text,
-  className = "",
-  ...props
-}) {
-  return (
-    <a
-      href="#"
-      className={`btn btn-${brand} btn-block ${className}`}
-      {...props}
-    >
-      <i className={`${icon} fa-fw`}></i> {text}
-    </a>
-  );
-}
