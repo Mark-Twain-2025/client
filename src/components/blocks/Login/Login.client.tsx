@@ -14,6 +14,21 @@ export default function LoginClientPage() {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const { isLogIn, setIsLogIn, setUserName } = useAuth();
 
+	// 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
+	const isFirstLoginToday = () => {
+		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
+		const lastLoginDate = localStorage.getItem('lastLoginDate');
+		console.log('Debug - Today:', today, 'Last login:', lastLoginDate, 'Is first login:', lastLoginDate !== today);
+		return lastLoginDate !== today;
+	};
+
+	// 오늘 날짜를 마지막 로그인 날짜로 저장하는 함수
+	const setTodayAsLoginDate = () => {
+		const today = new Date().toISOString().slice(0, 10);
+		localStorage.setItem('lastLoginDate', today);
+		console.log('Debug - Set today as login date:', today);
+	};
+
 	useEffect(() => {
 		if (isLogIn === true && !showLoginModal) {
 			router.replace('/');
@@ -27,7 +42,7 @@ export default function LoginClientPage() {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('http://localhost:3001/login', {
+			const res = await fetch('http://54.180.166.227:3001/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -43,7 +58,12 @@ export default function LoginClientPage() {
 				  localStorage.setItem('userName', data.user.name);
 				  setUserName(data.user.name);
 				}
-				setShowLoginModal(true);
+				
+				if (isFirstLoginToday()) {
+					setShowLoginModal(true);
+				} else {
+					router.push('/');
+				}
 			} else {
 				const err = await res.json();
 				alert(`로그인 실패: ${err.message}`);
@@ -253,7 +273,11 @@ export default function LoginClientPage() {
 			</div>
 			<CardModal
 				open={showLoginModal}
-				onClose={() => { setShowLoginModal(false); router.push("/"); }}
+				onClose={() => {
+					setShowLoginModal(false);
+					setTodayAsLoginDate();
+					router.push("/");
+				}}
 				imageSrc="/coin_no_bg.png"
 				imageAlt="coin"
 				title="🎉 출석 완료 🎉"

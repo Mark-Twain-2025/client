@@ -1,10 +1,20 @@
-'use client'
+"use client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/auth/Auth";
 
 export default function Main() {
   const router = useRouter();
+  const { isLogIn } = useAuth();
+
+  const handleVoteClick = () => {
+    if (!isLogIn) {
+      alert("로그인 후 이용할 수 있습니다.");
+      return;
+    }
+    router.push("/vote");
+  };
 
   return (
     <div className="main-bg">
@@ -13,18 +23,20 @@ export default function Main() {
           <Image src="/coin_no_bg.png" alt="coin" width={90} height={90} />
         </div>
         <h1>LunchCoin</h1>
-        <p className="subtitle">점심 메뉴 기반 투자 서비스, LunchCoin에 오신 것을 환영합니다!</p>
+        <p className="subtitle">
+          점심 메뉴 기반 투자 서비스, LunchCoin에 오신 것을 환영합니다!
+        </p>
         <div className="main-buttons">
           <button
             className="main-btn main-btn-primary"
-            onClick={() => router.push('/vote')}
+            onClick={handleVoteClick}
           >
             {/* <span className="icon">🍽️</span> */}
-            투표하러 가기
+            투표 하러 가기
           </button>
           <button
             className="main-btn main-btn-outline"
-            onClick={() => router.push('/vote')}
+            onClick={() => router.push("/result")}
           >
             {/* <span className="icon">📊</span> */}
             결과 보러 가기
@@ -70,7 +82,7 @@ export default function Main() {
       </svg>
       <style jsx>{`
         .main-bg {
-          background: #FFA500;
+          background: #ffa500;
           min-height: 90vh;
           width: 100vw;
           display: flex;
@@ -115,11 +127,11 @@ export default function Main() {
         }
         .main-btn-primary {
           background: #fff;
-          color: #FFA500;
+          color: #ffa500;
         }
         .main-btn-primary:hover {
           background: #ffe0a3;
-          color: #FFA500;
+          color: #ffa500;
         }
         .main-btn-outline {
           background: transparent;
@@ -128,7 +140,7 @@ export default function Main() {
         }
         .main-btn-outline:hover {
           background: #fff;
-          color: #FFA500;
+          color: #ffa500;
         }
         .main-wave {
           position: absolute;
