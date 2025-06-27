@@ -1,6 +1,6 @@
 "use client";
 import Table from "react-bootstrap/Table";
-import { Card } from "react-bootstrap";
+// import { Card } from "react-bootstrap";
 
 export default function DailyRank() {
   return (

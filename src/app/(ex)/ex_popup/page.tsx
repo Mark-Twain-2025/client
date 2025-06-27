@@ -1,8 +1,8 @@
 // src/app/(ex)/ex_popup/page.tsx
 "use client";
 import React, { useState } from "react";
-import PopupClient from "@/components/popup/popup.client";
-import Navbar from "@/components/Navbar/navbar.client";
+// import PopupClient from "@/components/popup/popup.client";
+// import Navbar from "@/components/Navbar/navbar.client";
 import VoteItem from "@/components/blocks/VoteItem";
 export default function ExamplePopup() {
   const [showModal, setShowModal] = useState(false);
