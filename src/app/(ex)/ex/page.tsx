@@ -8,8 +8,8 @@ export default function BSExamplePage() {
 
       <SBCard title="Circle Buttons">
         <div className="d-flex gap-2">
-          <CircleButton color="primary" />
-          <CircleButton color="success" size="lg" />
+          <CircleButton color="primary" icon="fas fa-star" />
+          <CircleButton color="success" size="lg" icon="fas fa-check" />
         </div>
       </SBCard>
 
