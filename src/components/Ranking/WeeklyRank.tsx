@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Table from "react-bootstrap/Table";
-import { Card } from "react-bootstrap";
+// import { Card } from "react-bootstrap";
 
 export default function WeeklyRank() {
   return (
