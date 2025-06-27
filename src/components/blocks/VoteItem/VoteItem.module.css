@@ -11,33 +11,34 @@
 }
 
 .title {
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #222;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   text-align: center;
+  letter-spacing: -1px;
 }
 
 .foodGrid {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 24px;
   width: 100%;
   align-items: center;
 }
 
 .foodRow {
   display: flex;
-  gap: 35px;
+  gap: 24px;
   justify-content: center;
 }
 
 .foodCard {
-  width: 250px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,16 +48,17 @@
   border: 1.5px solid #f3f3f3;
   padding: 0;
   outline: none;
+  overflow: hidden;
 }
 
 .foodCard.selected {
-  border: 3px solid #FFB800;
-  box-shadow: 0 6px 24px rgba(255,184,0,0.18);
+  border: 2.5px solid #FFB800;
+  box-shadow: 0 6px 24px rgba(255,184,0,0.13);
 }
 
 .foodImgBox {
   width: 100%;
-  height: 150px;
+  height: 135px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +92,7 @@
   font-weight: 600;
   color: #222;
   margin: 0;
-  height: 32px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,37 +104,40 @@
 .inputRow {
   display: flex;
   flex-direction: row;
-  gap: 10px;
   align-items: center;
-  margin-top: 12px;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
 }
 
 .inputLabel {
-  font-size: 15px;
+  font-size: 1rem;
   font-weight: 600;
   margin-right: 6px;
   white-space: nowrap;
 }
 
 .amountInput {
-  width: 140px;
+  width: 120px;
   padding: 10px 12px;
   border-radius: 8px;
   border: 1.5px solid #FFB800;
   font-size: 1rem;
   background: #fff;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
 }
 
 /* VoteItem.module.css */
 
 .centerAlignBox {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 24px;
-  max-width: 532px;
+  gap: 10px;
+  max-width: 384px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -142,38 +147,41 @@
   color: #b0b0b0;
   font-size: 0.95rem;
   text-align: center;
-  margin-top: 6px;
-}
-
-.amountInput {
-  width: 250px;
-  padding: 10px 14px;
-  font-size: 16px;
-  border: 1.5px solid #aaa;
-  border-radius: 8px;
-  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 500;
 }
 
 .voteButton {
-  min-width: 140px;
+  min-width: 170px;
+  width: 170px;
   height: 48px;
-  font-size: 15px;
+  font-size: 1.08rem;
   white-space: nowrap;
-  padding: 0 28px;
-  background-color: #000;
+  padding: 0 32px;
+  background-color: #FFB800;
   color: white;
-  font-weight: 600;
-  border-radius: 10px;
+  font-weight: 700;
+  border-radius: 999px;
   border: none;
   cursor: pointer;
   transition: background 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.voteButton span {
+  width: 100%;
+  text-align: center;
+  display: block;
 }
 
 .voteButton:disabled {
-  background-color: #ccc;
+  background-color: #ffe082;
+  color: #fffde7;
   cursor: not-allowed;
 }
 
@@ -182,35 +190,47 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 24px;
+  padding: 48px 0;
   background-color: #f5f5f5;
 }
 
 .voteCard {
   background-color: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 700px;
+  padding: 48px 40px 40px 40px;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+  max-width: 540px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
 }
+
 .fullWidthRow {
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: 532px; /* 음식 카드 2개 너비 + gap */
+  max-width: 384px;
   margin: 0 auto;
 }
 
 .fullWidthCard {
   width: 100%;
-  height: 60px;
+  height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 1.08rem;
   background-color: #f2f2f2;
-  border: 2px solid #ccc; /* 실선 */
+  border: 1.5px solid #ccc;
   border-radius: 12px;
   font-weight: 600;
+}
+
+.amountInput::placeholder {
+  font-size: 0.92rem;
+  color: #bbb;
+  opacity: 1;
+  text-align: center;
 }
