@@ -1,11 +1,19 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { quizQuestions, QuizQuestion } from "./quizData";
 
 const LUNCH_KEY = "user_lunch";
 const QUIZ_DATE_KEY = "quiz_date";
 const ANSWER_KEY = "quiz_answer";
+const QUIZ_DATA_KEY = "quiz_data"; // 오늘 푼 퀴즈 데이터 저장용
+
+interface QuizData {
+  id: number;
+  question: string;
+  choices: string[];
+  answer_index: number;
+  explanation: string;
+}
 
 export default function Quiz({
   lunch,
@@ -16,11 +24,54 @@ export default function Quiz({
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [, setShowExplanation] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
   const [userLunch, setUserLunch] = useState<number>(lunch ?? 1000);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [invalidState, setInvalidState] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState<QuizData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // 서버에서 랜덤 퀴즈 가져오기
+  useEffect(() => {
+    const fetchRandomQuiz = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/quiz/random");
+        if (response.ok) {
+          const quizData = await response.json();
+          setCurrentQuestion(quizData);
+          // 오늘 푼 퀴즈 데이터를 localStorage에 저장
+          localStorage.setItem(QUIZ_DATA_KEY, JSON.stringify(quizData));
+        } else {
+          console.error("퀴즈를 가져오는데 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("퀴즈 요청 중 오류:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const today = new Date().toISOString().slice(0, 10);
+    const lastQuizDate = localStorage.getItem(QUIZ_DATE_KEY);
+    const savedQuizData = localStorage.getItem(QUIZ_DATA_KEY);
+
+    // 오늘 이미 퀴즈를 풀었다면 저장된 퀴즈 데이터 사용
+    if (lastQuizDate === today && savedQuizData) {
+      try {
+        const quizData = JSON.parse(savedQuizData);
+        setCurrentQuestion(quizData);
+        setLoading(false);
+      } catch (error) {
+        console.error("저장된 퀴즈 데이터 파싱 오류:", error);
+        // 파싱 오류 시 새로운 퀴즈 가져오기
+        fetchRandomQuiz();
+      }
+    } else {
+      // 새로운 날짜이거나 저장된 데이터가 없으면 새로운 퀴즈 가져오기
+      fetchRandomQuiz();
+    }
+  }, []);
 
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -34,19 +85,31 @@ export default function Quiz({
         setShowExplanation(true);
         const storedLunch = localStorage.getItem(LUNCH_KEY);
         if (storedLunch) setUserLunch(Number(storedLunch));
-        setIsCorrect(Number(savedAnswer) === quizQuestions[0].correctAnswer);
+        // currentQuestion이 로드된 후에 정답 여부 확인
+        if (currentQuestion) {
+          setIsCorrect(Number(savedAnswer) === currentQuestion.answer_index);
+        }
       } else {
         // 날짜는 있는데 답안이 없음(비정상 상태)
         setInvalidState(true);
       }
     }
-  }, []);
+  }, [currentQuestion]);
 
   useEffect(() => {
     if (lunch !== undefined) setUserLunch(lunch);
   }, [lunch]);
 
-  const currentQuestion = quizQuestions[0];
+  // currentQuestion이 로드되지 않았거나 로딩 중일 때
+  if (loading || !currentQuestion) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.quizCard}>
+          <h1 style={styles.title}>퀴즈 로딩 중...</h1>
+        </div>
+      </div>
+    );
+  }
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (answered) return;
@@ -55,7 +118,7 @@ export default function Quiz({
 
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return;
-    const correct = selectedAnswer === currentQuestion.correctAnswer;
+    const correct = selectedAnswer === currentQuestion.answer_index;
     setIsCorrect(correct);
     setAnswered(true);
     setShowExplanation(true);
@@ -97,27 +160,27 @@ export default function Quiz({
           <div style={styles.questionContainer}>
             <h2 style={styles.question}>{currentQuestion.question}</h2>
             <div style={styles.optionsContainer}>
-              {currentQuestion.options.map((option, index) => {
+              {currentQuestion.choices.map((option, index) => {
                 let optionStyle = { ...styles.option };
                 if (selectedAnswer === index)
                   optionStyle = { ...optionStyle, ...styles.selectedOption };
-                if (index === currentQuestion.correctAnswer)
+                if (index === currentQuestion.answer_index)
                   optionStyle = { ...optionStyle, ...styles.correctOption };
                 if (
                   selectedAnswer === index &&
-                  index !== currentQuestion.correctAnswer
+                  index !== currentQuestion.answer_index
                 )
                   optionStyle = { ...optionStyle, ...styles.wrongOption };
                 // 오른쪽 텍스트 표시
                 let rightLabel = "";
                 if (
                   selectedAnswer === index &&
-                  index === currentQuestion.correctAnswer
+                  index === currentQuestion.answer_index
                 ) {
                   rightLabel = "내가 고른 답 · 정답";
                 } else if (selectedAnswer === index) {
                   rightLabel = "내가 고른 답";
-                } else if (index === currentQuestion.correctAnswer) {
+                } else if (index === currentQuestion.answer_index) {
                   rightLabel = "정답";
                 }
                 return (
@@ -184,16 +247,16 @@ export default function Quiz({
         <div style={styles.questionContainer}>
           <h2 style={styles.question}>{currentQuestion.question}</h2>
           <div style={styles.optionsContainer}>
-            {currentQuestion.options.map((option, index) => {
+            {currentQuestion.choices.map((option, index) => {
               let optionStyle = { ...styles.option };
               if (selectedAnswer === index)
                 optionStyle = { ...optionStyle, ...styles.selectedOption };
-              if (answered && index === currentQuestion.correctAnswer)
+              if (answered && index === currentQuestion.answer_index)
                 optionStyle = { ...optionStyle, ...styles.correctOption };
               if (
                 answered &&
                 selectedAnswer === index &&
-                index !== currentQuestion.correctAnswer
+                index !== currentQuestion.answer_index
               )
                 optionStyle = { ...optionStyle, ...styles.wrongOption };
               // 오른쪽 텍스트 표시
@@ -201,12 +264,12 @@ export default function Quiz({
               if (
                 answered &&
                 selectedAnswer === index &&
-                index === currentQuestion.correctAnswer
+                index === currentQuestion.answer_index
               ) {
                 rightLabel = "내가 고른 답 · 정답";
               } else if (answered && selectedAnswer === index) {
                 rightLabel = "내가 고른 답";
-              } else if (answered && index === currentQuestion.correctAnswer) {
+              } else if (answered && index === currentQuestion.answer_index) {
                 rightLabel = "정답";
               }
               return (

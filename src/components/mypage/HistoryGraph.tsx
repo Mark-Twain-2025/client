@@ -36,7 +36,6 @@ const CoinHistoryChart: React.FC<CoinHistoryChartProps> = ({
   };
 
   const pathD = getSmoothPath(points);
-  const end = points[points.length - 1];
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }}>
