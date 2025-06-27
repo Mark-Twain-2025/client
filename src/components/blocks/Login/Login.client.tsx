@@ -42,7 +42,7 @@ export default function LoginClientPage() {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('http://54.180.166.227:3001/login', {
+			const res = await fetch('/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

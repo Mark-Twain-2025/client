@@ -17,7 +17,7 @@ export default function SignupClient() {
 		e.preventDefault();
 
 		try {
-			const res = await fetch('http://54.180.166.227:3001/signup', {
+			const res = await fetch('/signup', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
