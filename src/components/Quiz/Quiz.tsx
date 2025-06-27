@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { quizQuestions, QuizQuestion } from "./quizData";
+import { quizQuestions } from "./quizData";
 
 const LUNCH_KEY = "user_lunch";
 const QUIZ_DATE_KEY = "quiz_date";
@@ -16,7 +16,7 @@ export default function Quiz({
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [, setShowExplanation] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
   const [userLunch, setUserLunch] = useState<number>(lunch ?? 1000);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
