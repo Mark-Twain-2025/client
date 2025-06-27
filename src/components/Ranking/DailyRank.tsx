@@ -1,18 +1,9 @@
 "use client";
 import Table from "react-bootstrap/Table";
-import { Card } from "react-bootstrap";
 
 export default function DailyRank() {
   return (
     <div style={{ margin: "2rem", width: "40rem", textAlign: "center" }}>
-      {/* <Card
-        style={{
-          width: "40rem",
-          padding: "2rem",
-          borderRadius: "20px",
-          textAlign: "center",
-        }}
-      > */}
       <Table>
         <thead>
           <tr>
@@ -43,7 +34,6 @@ export default function DailyRank() {
           </tr>
         </tbody>
       </Table>
-      {/* </Card> */}
     </div>
   );
 }
