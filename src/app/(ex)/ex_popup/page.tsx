@@ -5,8 +5,6 @@ import React, { useState } from "react";
 // import Navbar from "@/components/Navbar/navbar.client";
 import VoteItem from "@/components/blocks/VoteItem";
 export default function ExamplePopup() {
-  const [showModal, setShowModal] = useState(false);
-
   return (
     <div className="container mt-4">
       {/* 팝업 모달
