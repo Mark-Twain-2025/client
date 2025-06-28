@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
 import CardModal from "@/components/ui/CardModal";
 
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || '';
+
 export default function SignupClient() {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ export default function SignupClient() {
 		e.preventDefault();
 
 		try {
-			const res = await fetch('/api/signup', {
+			const res = await fetch(`${API_PREFIX}/signup`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -27,6 +29,7 @@ export default function SignupClient() {
 			});
 
 			if (res.ok) {
+				localStorage.setItem('userLunch', '1000');
 				setShowCongrats(true);
 			} else {
 				const err = await res.json();

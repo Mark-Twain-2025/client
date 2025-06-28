@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
@@ -18,6 +18,17 @@ export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { isLogIn, setIsLogIn, userName } = useAuth();
+  const [userLunch, setUserLunch] = useState(0);
+
+  useEffect(() => {
+    function updateLunch() {
+      const lunch = localStorage.getItem('userLunch');
+      setUserLunch(lunch ? Number(lunch) : 0);
+    }
+    updateLunch();
+    window.addEventListener('userLunchChanged', updateLunch);
+    return () => window.removeEventListener('userLunchChanged', updateLunch);
+  }, [isLogIn, open]);
 
   return (
     <>
@@ -58,7 +69,7 @@ export default function Navbar() {
                   </div>
                   <div className="sidebar-user-details">
                     <div className="sidebar-user-name">{userName || "User Name"}</div>
-                    <div className="sidebar-user-coin">보유 코인: 100런치</div>
+                    <div className="sidebar-user-coin">보유 코인: {userLunch}런치</div>
                   </div>
                 </div>
               </div>
