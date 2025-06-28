@@ -6,7 +6,12 @@ import getTodayStr from "@/utils/date";
 
 export default function DailyRank() {
   const [data, setData] = useState([]);
-  const today = getTodayStr();
+
+  // 원래이거
+  // const today = getTodayStr();
+
+  //테스트용
+  const today = "2025-06-27";
 
   useEffect(() => {
     fetchDailyRank(today).then((data) => {
@@ -23,7 +28,7 @@ export default function DailyRank() {
           <tr>
             <th>순위</th>
             <th>이름</th>
-            <th>보유 코인</th>
+            <th>보유 런치</th>
             <th>수익률</th>
           </tr>
         </thead>

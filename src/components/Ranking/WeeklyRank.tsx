@@ -9,7 +9,7 @@ export default function WeeklyRank() {
   const [data, setData] = useState([]);
   const today = getTodayStr();
 
-  // 수정필요!
+  // 테스트용
   const week = today === "2025-06-27" ? 1 : 2;
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function WeeklyRank() {
                 <td>{data.rank}</td>
                 <td>{data.name}</td>
                 <td>{data.rankValue}</td>
-                <td>{data.returnRate}</td>
+                <td>{data.returnRate}%</td>
               </tr>
             );
           })}
