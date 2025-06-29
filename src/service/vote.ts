@@ -36,3 +36,22 @@ export async function patchVoteBeforeCategory(voteId: string, category_id: strin
   if (!res.ok) throw new Error("투표 수정 실패");
   return await res.json();
 }
+
+// 오늘자 VoteAfter 투표 내역 조회
+export async function getTodayVoteAfter(userId: string, date: string): Promise<any> {
+  const res = await fetch(`${API_PREFIX}/vote_after/${userId}?date=${date}`);
+  if (!res.ok) throw new Error("투표 내역 조회 실패");
+  const data = await res.json();
+  return data && data.length > 0 ? data[0] : null;
+}
+
+// VoteAfter 투표 POST
+export async function voteAfter({ userId, category_id, date }: { userId: string, category_id: string, date: string }): Promise<any> {
+  const res = await fetch(`${API_PREFIX}/vote_after/${userId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ category_id, date }),
+  });
+  if (!res.ok) throw new Error("투표 실패");
+  return await res.json();
+}
