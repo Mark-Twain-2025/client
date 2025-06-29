@@ -12,8 +12,9 @@ export default function LoginClientPage() {
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
-	const { isLogIn, setIsLogIn, setUserName } = useAuth();
-
+	// const { isLogIn, setIsLogIn, setUserName } = useAuth();
+	const { isLogIn, setIsLogIn, user, setUser } = useAuth();
+	
 	// 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
 	const isFirstLoginToday = () => {
 		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
@@ -55,8 +56,10 @@ export default function LoginClientPage() {
 				const data = await res.json();
 				setIsLogIn(true);
 				if (data.user && data.user.name) {
-				  localStorage.setItem('userName', data.user.name);
-				  setUserName(data.user.name);
+					// user 객체를 JSON 문자열로 저장
+					localStorage.setItem('user', JSON.stringify(data.user));
+					// setUser에 전체 user 객체 전달
+					setUser(data.user);
 				}
 				
 				if (isFirstLoginToday()) {
