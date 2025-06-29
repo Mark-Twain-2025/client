@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/Auth';
 import { FaUser, FaLock } from 'react-icons/fa';
 import CardModal from "@/components/ui/CardModal";
+import { addUserLunch } from "@/lib/utils";
+
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || '';
 
 export default function LoginClientPage() {
 	const router = useRouter();
@@ -43,7 +46,7 @@ export default function LoginClientPage() {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('/api/login', {
+			const res = await fetch(`${API_PREFIX}/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -80,9 +83,12 @@ export default function LoginClientPage() {
 					// localStorage.setItem('user', JSON.stringify(data.user));
 					// // setUser에 전체 user 객체 전달
 					// setUser(data.user);
+
+				localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장 
 				}
 				
 				if (isFirstLoginToday()) {
+					addUserLunch(10);
 					setShowLoginModal(true);
 				} else {
 					router.push('/');

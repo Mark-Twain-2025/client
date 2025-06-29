@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
@@ -17,6 +17,7 @@ const menuItems = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+
   // const { isLogIn, setIsLogIn, userName } = useAuth();
   const { isLogIn, setIsLogIn, user, setUser } = useAuth();
 
