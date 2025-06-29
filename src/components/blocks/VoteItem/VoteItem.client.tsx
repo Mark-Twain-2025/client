@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import styles from "./VoteItem.module.css";
 import CardModal from "@/components/ui/CardModal";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/auth/Auth";
+
 const foodTypes = [
   { key: "korean", label: "한식", img: "/한식.avif" },
   { key: "chinese", label: "중식", img: "/한식.avif" },
@@ -25,7 +27,9 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
   const secondRow = foodTypes.slice(2, 4);
   const thirdRow = foodTypes.slice(4);
   const [popupInfo, setPopupInfo] = useState<{label: string, amount: string} | null>(null);
-
+  // 로그인된 유저 잘 찍히는지 테스트
+  const { userName } = useAuth();
+  console.log("userName:", userName);
 
   const FoodCard = ({ food, selected, onSelect }: { food: typeof foodTypes[0]; selected: string | null; onSelect: (key: string) => void }) => (
     <div

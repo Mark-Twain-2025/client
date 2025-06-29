@@ -58,6 +58,8 @@ export default function LoginClientPage() {
 				const data = await res.json();
 				setIsLogIn(true);
 				if (data.user && data.user.name) {
+				localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장 
+
 				  localStorage.setItem('userName', data.user.name);
 				  setUserName(data.user.name);
 				}
