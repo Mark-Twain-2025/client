@@ -10,8 +10,8 @@ import {getTodayVoteAfter, voteAfter } from "@/service/vote";
 
 const foodTypes = [
   { key: "korean", label: "한식", img: "/한식.avif" },
-  { key: "chinese", label: "중식", img: "/한식.avif" },
-  { key: "japanese", label: "일식", img: "/한식.avif" },
+  { key: "chinese", label: "일식", img: "/한식.avif" },
+  { key: "japanese", label: "중식", img: "/한식.avif" },
   { key: "western", label: "양식", img: "/한식.avif" },
   { key: "etc", label: "기타", img: "/한식.avif" },
 ];
