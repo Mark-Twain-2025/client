@@ -4,6 +4,8 @@ import styles from "./VoteItem.module.css";
 import CardModal from "@/components/ui/CardModal";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/Auth";
+import { useEffect } from "react";
+import { fetchUserCoins } from "@/service/vote";
 
 const foodTypes = [
   { key: "korean", label: "한식", img: "/한식.avif" },
@@ -14,11 +16,10 @@ const foodTypes = [
 ];
 
 interface VoteItemProps {
-  lunchCount: number;
   onVote?: (vote: { type: string; amount: number }) => void;
 }
 
-const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
+const VoteItemClient = ({ onVote }: VoteItemProps) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [open, setOpen] = useState(false);
@@ -27,9 +28,25 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
   const secondRow = foodTypes.slice(2, 4);
   const thirdRow = foodTypes.slice(4);
   const [popupInfo, setPopupInfo] = useState<{label: string, amount: string} | null>(null);
-  // 로그인된 유저 잘 찍히는지 테스트
   const { userName } = useAuth();
   console.log("userName:", userName);
+
+  // 코인 상태 및 유저 정보 fetch
+  const [coins, setCoins] = useState<number>(0);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    const getCoins = async () => {
+      try {
+        const coins = await fetchUserCoins(userId);
+        setCoins(coins);
+      } catch (err) {
+        console.error("코인 정보 불러오기 실패:", err);
+      }
+    };
+    getCoins();
+  }, []);
 
   const FoodCard = ({ food, selected, onSelect }: { food: typeof foodTypes[0]; selected: string | null; onSelect: (key: string) => void }) => (
     <div
@@ -116,7 +133,7 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
                 : "투표하기"}
             </button>
           </div>
-          <div className={styles.lunchCount}>{lunchCount} 런치 보유</div>
+          <div className={styles.lunchCount}>{coins} 런치 보유</div>
         </div>
         {/* 투표 완료 팝업 */}
         <CardModal
