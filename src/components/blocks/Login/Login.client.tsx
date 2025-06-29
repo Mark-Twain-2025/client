@@ -15,8 +15,9 @@ export default function LoginClientPage() {
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [showLoginModal, setShowLoginModal] = useState(false);
-	const { isLogIn, setIsLogIn, setUserName } = useAuth();
-
+	// const { isLogIn, setIsLogIn, setUserName } = useAuth();
+	const { isLogIn, setIsLogIn, user, setUser } = useAuth();
+	
 	// 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
 	const isFirstLoginToday = () => {
 		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
@@ -54,14 +55,36 @@ export default function LoginClientPage() {
 				body: JSON.stringify({ email, password }),
 			});
 
+			
+			
+
 			if (res.ok) {
 				const data = await res.json();
 				setIsLogIn(true);
-				if (data.user && data.user.name) {
-				localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장 
+				
+				console.log(data);
 
-				  localStorage.setItem('userName', data.user.name);
-				  setUserName(data.user.name);
+				if (data.user && data.user.name) {
+					const userInfoRes=  await fetch(`/api/user_info/${data.user.user_id}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						credentials: 'include',
+					});
+					const userInfo = await userInfoRes.json();
+					console.log(userInfo);
+
+					const updatedUser = { ...data.user, coin: userInfo.coins };
+					localStorage.setItem('user', JSON.stringify(updatedUser));
+					setUser(updatedUser);
+
+					// // user 객체를 JSON 문자열로 저장
+					// localStorage.setItem('user', JSON.stringify(data.user));
+					// // setUser에 전체 user 객체 전달
+					// setUser(data.user);
+
+				localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장 
 				}
 				
 				if (isFirstLoginToday()) {
