@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/Auth';
 import { FaUser, FaLock } from 'react-icons/fa';
 import CardModal from "@/components/ui/CardModal";
+import { addUserLunch } from "@/lib/utils";
+
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || '';
 
 export default function LoginClientPage() {
 	const router = useRouter();
@@ -42,7 +45,7 @@ export default function LoginClientPage() {
 	const handleLogin = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const res = await fetch('http://54.180.166.227:3001/login', {
+			const res = await fetch(`${API_PREFIX}/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -60,6 +63,7 @@ export default function LoginClientPage() {
 				}
 				
 				if (isFirstLoginToday()) {
+					addUserLunch(10);
 					setShowLoginModal(true);
 				} else {
 					router.push('/');
