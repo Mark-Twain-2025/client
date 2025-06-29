@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
 	isLogIn: boolean | undefined;
@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	// const [userName, setUserName] = useState<string | null>(null);
 	const [user, setUser] = useState<any>(null);
 
+
+
 	useEffect(() => {
 		const token = document.cookie.includes('authToken');
 		setIsLogIn(token);
@@ -29,7 +31,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			try {
 				// 먼저 JSON 파싱을 시도
 				const parsedUser = JSON.parse(userFromStorage);
+
 				setUser(parsedUser);
+				setIsLogIn(true);
 			} catch (error) {
 				// JSON 파싱이 실패하면 문자열 그대로 사용하거나 기본값 설정
 				console.warn('User data is not valid JSON, using default values');

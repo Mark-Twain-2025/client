@@ -52,14 +52,34 @@ export default function LoginClientPage() {
 				body: JSON.stringify({ email, password }),
 			});
 
+			
+			
+
 			if (res.ok) {
 				const data = await res.json();
 				setIsLogIn(true);
+				
+				console.log(data);
+
 				if (data.user && data.user.name) {
-					// user 객체를 JSON 문자열로 저장
-					localStorage.setItem('user', JSON.stringify(data.user));
-					// setUser에 전체 user 객체 전달
-					setUser(data.user);
+					const userInfoRes=  await fetch(`/api/user_info/${data.user.user_id}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						credentials: 'include',
+					});
+					const userInfo = await userInfoRes.json();
+					console.log(userInfo);
+
+					const updatedUser = { ...data.user, coin: userInfo.coins };
+					localStorage.setItem('user', JSON.stringify(updatedUser));
+					setUser(updatedUser);
+
+					// // user 객체를 JSON 문자열로 저장
+					// localStorage.setItem('user', JSON.stringify(data.user));
+					// // setUser에 전체 user 객체 전달
+					// setUser(data.user);
 				}
 				
 				if (isFirstLoginToday()) {
