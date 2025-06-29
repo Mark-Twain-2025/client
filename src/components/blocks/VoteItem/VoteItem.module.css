@@ -52,8 +52,8 @@
 }
 
 .foodCard.selected {
-  border: 2.5px solid #FFB800;
-  box-shadow: 0 6px 24px rgba(255,184,0,0.13);
+  border: 2.5px solid #FFA500;
+  box-shadow: 0 6px 24px rgba(255,165,0,0.13);
 }
 
 .foodImgBox {
@@ -121,7 +121,7 @@
   width: 120px;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1.5px solid #FFB800;
+  border: 1.5px solid #FFA500;
   font-size: 1rem;
   background: #fff;
   text-align: center;
@@ -159,7 +159,7 @@
   font-size: 1.08rem;
   white-space: nowrap;
   padding: 0 32px;
-  background-color: #FFB800;
+  background-color: #FFA500;
   color: white;
   font-weight: 700;
   border-radius: 999px;
