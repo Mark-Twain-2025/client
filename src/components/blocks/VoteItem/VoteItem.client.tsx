@@ -78,27 +78,28 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
         </div>
 
         <div className={styles.centerAlignBox}>
-          <label className={styles.inputLabel}>투자금액</label>
-          <input
-            type="number"
-            placeholder="최소 ~ 최대"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))}
-            className={styles.amountInput}
-          />
-          <button
-            className={styles.voteButton}
-            onClick={handleVote}
-            disabled={!selected || !amount}
-            type="button"
-          >
-            {selected
-              ? `${foodTypes.find((f) => f.key === selected)?.label}에 투표하기`
-              : "투표하기"}
-          </button>
+          <div className={styles.inputRow}>
+            <label className={styles.inputLabel}>투자금액</label>
+            <input
+              type="number"
+              placeholder="최소 ~ 최대"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))}
+              className={styles.amountInput}
+            />
+            <button
+              className={styles.voteButton}
+              onClick={handleVote}
+              disabled={!selected || !amount}
+              type="button"
+            >
+              {selected
+                ? `${foodTypes.find((f) => f.key === selected)?.label}에 투표하기`
+                : "투표하기"}
+            </button>
+          </div>
+          <div className={styles.lunchCount}>{lunchCount} 런치 보유</div>
         </div>
-
-        <div className={styles.lunchCount}>{lunchCount} 런치 보유</div>
       </div>
     </div>
   );
