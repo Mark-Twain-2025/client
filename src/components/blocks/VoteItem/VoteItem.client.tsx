@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./VoteItem.module.css";
-
+import CardModal from "@/components/ui/CardModal";
+import { useRouter } from "next/navigation";
 const foodTypes = [
   { key: "korean", label: "한식", img: "/한식.avif" },
   { key: "chinese", label: "중식", img: "/한식.avif" },
@@ -18,10 +19,13 @@ interface VoteItemProps {
 const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
   const [selected, setSelected] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
-
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const firstRow = foodTypes.slice(0, 2);
   const secondRow = foodTypes.slice(2, 4);
   const thirdRow = foodTypes.slice(4);
+  const [popupInfo, setPopupInfo] = useState<{label: string, amount: string} | null>(null);
+
 
   const FoodCard = ({ food, selected, onSelect }: { food: typeof foodTypes[0]; selected: string | null; onSelect: (key: string) => void }) => (
     <div
@@ -42,12 +46,22 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
   const handleVote = () => {
     if (!selected) return alert("음식을 선택하세요!");
     if (!amount || Number(amount) <= 0) return alert("금액을 입력하세요!");
-  
+
     onVote?.({ type: selected, amount: Number(amount) });
+    setPopupInfo({
+      label: foodTypes.find((f) => f.key === selected)?.label || "",
+      amount,
+    });
+    setOpen(true);
+
     setAmount("");
     setSelected(null);
   };
-  
+
+  const handleClose = () => {
+    setOpen(false);
+    router.push("/");
+  };
 
   return (
     <div className={styles.votePageContainer}>
@@ -100,6 +114,25 @@ const VoteItemClient = ({ lunchCount, onVote }: VoteItemProps) => {
           </div>
           <div className={styles.lunchCount}>{lunchCount} 런치 보유</div>
         </div>
+        {/* 투표 완료 팝업 */}
+        <CardModal
+          open={open}
+          onClose={handleClose}
+          imageSrc="/coin.png"
+          imageAlt="coin"
+          title={
+            <span>
+              🎉 <span style={{ color: '#FFA500' }}>투표 완료</span> 🎉
+            </span>
+          }
+          message={
+            <span>
+              <b>{popupInfo?.label}</b>에 <b>{popupInfo?.amount}</b> 런치<br />
+              투표가 완료되었습니다!
+            </span>
+          }
+          buttonText="확인"
+        />
       </div>
     </div>
   );
