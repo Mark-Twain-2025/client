@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
-import { fetchWeeklyRank } from "@/service/result";
+import { fetchWeeklyRank } from "@/service/fetchResult";
 import getTodayStr from "@/utils/date";
 
 const avatarUrl = [2, 1, 3];

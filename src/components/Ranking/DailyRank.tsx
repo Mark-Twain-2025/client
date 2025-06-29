@@ -1,7 +1,7 @@
 "use client";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
-import { fetchDailyRank } from "@/service/result";
+import { fetchDailyRank } from "@/service/fetchResult";
 import getTodayStr from "@/utils/date";
 
 export default function DailyRank() {

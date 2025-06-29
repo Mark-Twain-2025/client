@@ -2,7 +2,7 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
-import { fetchWeeklyRank } from "@/service/result";
+import { fetchWeeklyRank } from "@/service/fetchResult";
 import getTodayStr from "@/utils/date";
 
 export default function WeeklyRank() {
