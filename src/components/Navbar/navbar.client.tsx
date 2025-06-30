@@ -17,18 +17,9 @@ const menuItems = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { isLogIn, setIsLogIn, userName } = useAuth();
-  const [userLunch, setUserLunch] = useState(0);
 
-  useEffect(() => {
-    function updateLunch() {
-      const lunch = localStorage.getItem('userLunch');
-      setUserLunch(lunch ? Number(lunch) : 0);
-    }
-    updateLunch();
-    window.addEventListener('userLunchChanged', updateLunch);
-    return () => window.removeEventListener('userLunchChanged', updateLunch);
-  }, [isLogIn, open]);
+  // const { isLogIn, setIsLogIn, userName } = useAuth();
+  const { isLogIn, setIsLogIn, user, setUser } = useAuth();
 
   return (
     <>
@@ -68,8 +59,9 @@ export default function Navbar() {
                     <Image src="/default_bird.png" alt="user" width={50} height={50} />
                   </div>
                   <div className="sidebar-user-details">
-                    <div className="sidebar-user-name">{userName || "User Name"}</div>
-                    <div className="sidebar-user-coin">보유 코인: {userLunch}런치</div>
+                    <div className="sidebar-user-name">{user?.name || "User Name"}</div>
+                    {/* <div className="sidebar-user-coin">보유 코인: 100런치</div> */}
+                    <div className="sidebar-user-coin">보유 코인: {user?.coin || 0}런치</div>
                   </div>
                 </div>
               </div>
@@ -122,7 +114,8 @@ export default function Navbar() {
                     onClick={() => {
                       // 로그아웃 처리 (쿠키 삭제 등 필요시 추가)
                       setIsLogIn(false);
-                      localStorage.removeItem('userName');
+                      localStorage.removeItem('user');
+                      setUser(null);
                       setOpen(false);
                       alert("로그아웃되었습니다");
                       router.push("/");

@@ -1,0 +1,236 @@
+.voteContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 0px 0 32px 0;
+  background: #fff;
+  border-radius: 20px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 0;
+  text-align: center;
+  letter-spacing: -1px;
+}
+
+.foodGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  align-items: center;
+}
+
+.foodRow {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.foodCard {
+  width: 180px;
+  height: 180px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: box-shadow 0.2s, border 0.2s;
+  border: 1.5px solid #f3f3f3;
+  padding: 0;
+  outline: none;
+  overflow: hidden;
+}
+
+.foodCard.selected {
+  border: 2.5px solid #FFA500;
+  box-shadow: 0 6px 24px rgba(255,165,0,0.13);
+}
+
+.foodImgBox {
+  width: 100%;
+  height: 135px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: #faf8f2;
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.foodImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+}
+
+.foodImgPlaceholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foodLabel {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+  background: none;
+}
+
+.inputRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.inputLabel {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+
+.amountInput {
+  width: 120px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #FFA500;
+  font-size: 1rem;
+  background: #fff;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+
+/* VoteItem.module.css */
+
+.centerAlignBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 384px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lunchCount {
+  color: #b0b0b0;
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.voteButton {
+  min-width: 170px;
+  width: 170px;
+  height: 48px;
+  font-size: 1.08rem;
+  white-space: nowrap;
+  padding: 0 32px;
+  background-color: #FFA500;
+  color: white;
+  font-weight: 700;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.voteButton span {
+  width: 100%;
+  text-align: center;
+  display: block;
+}
+
+.voteButton:disabled {
+  background-color: #ffe082;
+  color: #fffde7;
+  cursor: not-allowed;
+}
+
+.votePageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 48px 0;
+  background-color: #f5f5f5;
+}
+
+.voteCard {
+  background-color: white;
+  padding: 48px 40px 40px 40px;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+  max-width: 540px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.fullWidthRow {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 384px;
+  margin: 0 auto;
+}
+
+.fullWidthCard {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.08rem;
+  background-color: #f2f2f2;
+  border: 1.5px solid #ccc;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.amountInput::placeholder {
+  font-size: 0.92rem;
+  color: #bbb;
+  opacity: 1;
+  text-align: center;
+}

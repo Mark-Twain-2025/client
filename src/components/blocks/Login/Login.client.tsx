@@ -10,27 +10,22 @@ import { addUserLunch } from "@/lib/utils";
 const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || "";
 
 export default function LoginClientPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const { isLogIn, setIsLogIn, setUserName } = useAuth();
 
-  // 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
-  const isFirstLoginToday = () => {
-    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
-    const lastLoginDate = localStorage.getItem("lastLoginDate");
-    console.log(
-      "Debug - Today:",
-      today,
-      "Last login:",
-      lastLoginDate,
-      "Is first login:",
-      lastLoginDate !== today
-    );
-    return lastLoginDate !== today;
-  };
+	const router = useRouter();
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showLoginModal, setShowLoginModal] = useState(false);
+	// const { isLogIn, setIsLogIn, setUserName } = useAuth();
+	const { isLogIn, setIsLogIn, user, setUser } = useAuth();
+	
+	// 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
+	const isFirstLoginToday = () => {
+		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
+		const lastLoginDate = localStorage.getItem('lastLoginDate');
+		console.log('Debug - Today:', today, 'Last login:', lastLoginDate, 'Is first login:', lastLoginDate !== today);
+		return lastLoginDate !== today;
+	};
 
   // 오늘 날짜를 마지막 로그인 날짜로 저장하는 함수
   const setTodayAsLoginDate = () => {
@@ -63,14 +58,54 @@ export default function LoginClientPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        setIsLogIn(true);
-        if (data.user && data.user.name) {
-          localStorage.setItem("userName", data.user.name);
-          localStorage.setItem("user_id", data.user.user_id);
-          setUserName(data.user.name);
-        }
+
+			
+			
+
+			if (res.ok) {
+				const data = await res.json();
+				setIsLogIn(true);
+				
+				console.log(data);
+
+				if (data.user && data.user.name) {
+					const userInfoRes=  await fetch(`/api/user_info/${data.user.user_id}`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						credentials: 'include',
+					});
+					const userInfo = await userInfoRes.json();
+					console.log(userInfo);
+
+					const updatedUser = { ...data.user, coin: userInfo.coins };
+					localStorage.setItem('user', JSON.stringify(updatedUser));
+					setUser(updatedUser);
+
+					// // user 객체를 JSON 문자열로 저장
+					// localStorage.setItem('user', JSON.stringify(data.user));
+					// // setUser에 전체 user 객체 전달
+					// setUser(data.user);
+
+				localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장 
+				}
+				
+				if (isFirstLoginToday()) {
+					addUserLunch(10);
+					setShowLoginModal(true);
+				} else {
+					router.push('/');
+				}
+			} else {
+				const err = await res.json();
+				alert(`로그인 실패: ${err.message}`);
+			}
+		} catch (error) {
+			console.error('Login error:', error);
+			alert('로그인 중 오류 발생');
+		}
+	};
 
         if (isFirstLoginToday()) {
           addUserLunch(10);

@@ -1,7 +1,7 @@
 import VoteItemClient from './VoteItem.client';
 
 interface VoteItemProps {
-	lunchCount: number;
+
 	onVote?: (vote: { type: string; amount: number }) => void;
 }
 
