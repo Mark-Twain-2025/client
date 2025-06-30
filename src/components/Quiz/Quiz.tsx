@@ -253,6 +253,15 @@ export default function Quiz() {
             )}
             <p style={styles.message}>내일 다시 도전해보세요!</p>
           </div>
+          <div style={styles.homeButtonContainer}>
+            <button
+              type="button"
+              style={styles.prettyHomeButton}
+              onClick={() => router.push("/")}
+            >
+              홈으로 이동
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -435,5 +444,28 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: "#888",
     marginTop: "8px",
     textAlign: "center",
+  },
+  homeButtonContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "32px",
+    marginBottom: "0px",
+    width: "100%",
+  },
+  prettyHomeButton: {
+    background: "#ffa500",
+    color: "#fff",
+    fontWeight: 700,
+    fontSize: "20px",
+    padding: "8px 48px",
+    borderRadius: "2rem",
+    border: "2px solid #ffa500",
+    outline: "none",
+    cursor: "pointer",
+    margin: "0 auto",
+    display: "block",
+    boxShadow: "0 2px 8px rgba(255,165,0,0.10)",
+    transition: "background 0.2s, color 0.2s, border 0.2s",
   },
 };

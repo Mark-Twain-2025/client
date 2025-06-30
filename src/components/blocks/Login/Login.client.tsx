@@ -21,9 +21,11 @@ export default function LoginClientPage() {
 	
 	// 오늘 날짜가 마지막 로그인 날짜와 다른지 확인하는 함수
 	const isFirstLoginToday = () => {
-		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
+		const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+		console.log('today', today);
 		const lastLoginDate = localStorage.getItem('lastLoginDate');
-		console.log('Debug - Today:', today, 'Last login:', lastLoginDate, 'Is first login:', lastLoginDate !== today);
+		console.log('lastLoginDate', lastLoginDate);
+		console.log('lastLoginDate !== today', lastLoginDate !== today);
 		return lastLoginDate !== today;
 	};
 
@@ -33,12 +35,6 @@ export default function LoginClientPage() {
     localStorage.setItem("lastLoginDate", today);
     console.log("Debug - Set today as login date:", today);
   };
-
-  useEffect(() => {
-    if (isLogIn === true && !showLoginModal) {
-      router.replace("/");
-    }
-  }, [isLogIn, showLoginModal, router]);
 
   if (isLogIn === undefined) {
     return (
@@ -85,13 +81,33 @@ export default function LoginClientPage() {
 					// setUser(data.user);
 
 					localStorage.setItem('userId', data.user.user_id); // 로컬스토리지에 user_id 저장
-				}
-				
-				if (isFirstLoginToday()) {
-					addUserLunch(10);
-					setShowLoginModal(true);
-				} else {
-					router.push('/');
+
+					// 출석(10코인) 지급
+					const userId = data.user.user_id;
+					// console.log(userId);
+					const today = new Date().toISOString().slice(0, 10);
+					const attendanceRes = await fetch(
+						`/api/attendance/${userId}?date=${today}`,
+						{ method: 'POST' }
+					);
+					
+					if (attendanceRes.ok) {
+						const attendanceData = await attendanceRes.json();
+						setUser((prev: any) => ({ ...prev, coin: attendanceData.coins }));
+						localStorage.setItem('user', JSON.stringify({ ...data.user, coin: attendanceData.coins }));
+						localStorage.setItem('lastAttendance', today);
+
+
+						console.log('isFirstLoginToday()', isFirstLoginToday());
+						if (isFirstLoginToday()) {
+							localStorage.setItem('lastLoginDate', today);
+							addUserLunch(10);
+							setShowLoginModal(true);
+						} else {
+							
+							router.push('/');
+						}
+					}
 				}
 			} else {
 				const err = await res.json();
@@ -311,6 +327,7 @@ export default function LoginClientPage() {
         open={showLoginModal}
         onClose={() => {
           setShowLoginModal(false);
+
           setTodayAsLoginDate();
           router.push("/");
         }}
