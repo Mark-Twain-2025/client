@@ -1,4 +1,14 @@
+"use client";
 import React from "react";
+import { useEffect, useState } from "react";
+import { fetchQuizHis } from "@/service/fetchMypage";
+
+const user_id = localStorage.getItem("user_id");
+
+interface QuizHistoryData {
+  correctCount: number;
+  totalCount: number;
+}
 
 interface DonutChartProps {
   value: number; // 예: 12000
@@ -14,7 +24,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
   size = 120,
   strokeWidth = 10,
   color = "#FFB800",
-  bgColor = "#ccc",
+  bgColor = "#f3f4f6",
 }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -49,7 +59,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         dominantBaseline="central"
         textAnchor="middle"
         fontSize="25"
-        fill="#222"
+        fill="#1f2937"
         fontWeight="bold"
       >
         {Math.round((value / max) * 100)}%
@@ -59,23 +69,58 @@ const DonutChart: React.FC<DonutChartProps> = ({
 };
 
 export default function QuizHistory() {
+  const [his, setHis] = useState<QuizHistoryData>({
+    correctCount: 0,
+    totalCount: 0,
+  });
+
+  useEffect(() => {
+    if (user_id) {
+      fetchQuizHis(parseInt(user_id)).then((data) => {
+        setHis(data);
+      });
+    }
+  }, []);
+
   return (
     <div
+      className="bg-white rounded-2xl p-6 border border-yellow-100 transition-all duration-300 cursor-pointer"
       style={{
-        padding: "2rem",
-        borderRadius: "12px",
-        backgroundColor: "#fffae1",
-        alignContent: "center",
+        boxShadow:
+          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow =
+          "0 25px 50px -12px rgba(251, 191, 36, 0.25)";
+        e.currentTarget.style.borderColor = "#fb923c";
+        e.currentTarget.style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow =
+          "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)";
+        e.currentTarget.style.borderColor = "#fef3c7";
+        e.currentTarget.style.transform = "translateY(0)";
       }}
     >
-      <h4>퀴즈 히스토리</h4>
-      <div className="grid grid-cols-[2fr_1fr]">
-        <div>
-          <DonutChart value={3} max={4} />
+      <div className="flex items-center mb-4">
+        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+          <span className="text-yellow-600 text-sm">📊</span>
         </div>
-        <div className="align-middle">
-          <div>연속 출석</div>
-          <h3>1일</h3>
+        <h3 className="text-xl font-bold text-gray-800">퀴즈 히스토리</h3>
+      </div>
+
+      <div className="grid grid-cols-2 items-center">
+        <div className="flex justify-center">
+          <DonutChart value={his.correctCount} max={his.totalCount || 1} />
+        </div>
+        <div className="text-center">
+          <p className="text-gray-600 text-sm font-medium mb-1">출석</p>
+          <h3 className="text-2xl font-bold text-yellow-600">
+            {his.totalCount}일
+          </h3>
+          <p className="text-xs text-gray-500 mt-1">
+            정답률: {his.correctCount}/{his.totalCount}
+          </p>
         </div>
       </div>
     </div>

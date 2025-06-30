@@ -1,49 +1,60 @@
 "use client";
 import Table from "react-bootstrap/Table";
-// import { Card } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { fetchDailyRank } from "@/service/fetchResult";
+import getTodayStr from "@/utils/date";
 
 export default function DailyRank() {
+  const [data, setData] = useState([]);
+
+  const today = getTodayStr();
+  // const today = "2025-06-27"; // 테스트용
+
+  useEffect(() => {
+    fetchDailyRank(today).then((data) => {
+      setData(data?.ranking ?? []);
+    });
+  }, []);
+
   return (
     <div style={{ margin: "2rem", width: "40rem", textAlign: "center" }}>
-      {/* <Card
-        style={{
-          width: "40rem",
-          padding: "2rem",
-          borderRadius: "20px",
-          textAlign: "center",
-        }}
-      > */}
-      <Table>
-        <thead>
-          <tr>
-            <th>순위</th>
-            <th>이름</th>
-            <th>보유 코인</th>
-            <th>수익률</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>예경</td>
-            <td>1000</td>
-            <td>23%</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>예경</td>
-            <td>1000</td>
-            <td>23%</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>예경</td>
-            <td>1000</td>
-            <td>23%</td>
-          </tr>
-        </tbody>
-      </Table>
-      {/* </Card> */}
+      {data.length === 0 ? (
+        <div
+          style={{
+            height: "200px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#f8f9fa",
+            borderRadius: "12px",
+            fontSize: "1.2rem",
+            color: "#888",
+          }}
+        >
+          아직 랭킹 정보가 없습니다.
+        </div>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>이름</th>
+              <th>보유 런치</th>
+              <th>수익률</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((data) => (
+              <tr key={data.user_id}>
+                <td>{data.rank}</td>
+                <td>{data.name}</td>
+                <td>{data.todayLunch}</td>
+                <td>{data.returnRate}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 }

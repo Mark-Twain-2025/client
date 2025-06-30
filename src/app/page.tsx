@@ -8,12 +8,12 @@ export default function Main() {
   const router = useRouter();
   const { isLogIn } = useAuth();
 
-  const handleVoteClick = () => {
+  const handleVoteClick = (path: string) => {
     if (!isLogIn) {
       alert("로그인 후 이용할 수 있습니다.");
       return;
     }
-    router.push("/vote");
+    router.push(path);
   };
 
   return (
@@ -29,17 +29,17 @@ export default function Main() {
         <div className="main-buttons">
           <button
             className="main-btn main-btn-primary"
-            onClick={handleVoteClick}
+            onClick={() => handleVoteClick("/vote")}
           >
             {/* <span className="icon">🍽️</span> */}
-            투표 하러 가기
+            오전 투표하기
           </button>
           <button
             className="main-btn main-btn-outline"
-            onClick={() => router.push("/result")}
+            onClick={() => handleVoteClick("/voteafter")}
           >
             {/* <span className="icon">📊</span> */}
-            결과 보러 가기
+            오후 투표하기
           </button>
         </div>
       </div>

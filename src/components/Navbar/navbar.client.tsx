@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/components/auth/Auth";
+import { fetchUserCoins } from "@/service/vote";
 
 const menuItems = [
   { label: "Home", icon: "/Nav_home.svg", href: "/" },
@@ -17,18 +18,20 @@ const menuItems = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { isLogIn, setIsLogIn, userName } = useAuth();
-  const [userLunch, setUserLunch] = useState(0);
+  const [coins, setCoins] = useState(0);
+  const pathname = usePathname();
+
+  // const { isLogIn, setIsLogIn, userName } = useAuth();
+  const { isLogIn, setIsLogIn, user, setUser } = useAuth();
 
   useEffect(() => {
-    function updateLunch() {
-      const lunch = localStorage.getItem('userLunch');
-      setUserLunch(lunch ? Number(lunch) : 0);
-    }
-    updateLunch();
-    window.addEventListener('userLunchChanged', updateLunch);
-    return () => window.removeEventListener('userLunchChanged', updateLunch);
-  }, [isLogIn, open]);
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    fetchUserCoins(userId).then((c) => {
+      console.log('코인 fetch됨:', c);
+      setCoins(c);
+    });
+  }, [pathname]); // 경로가 바뀔 때마다 fetch
 
   return (
     <>
@@ -68,8 +71,9 @@ export default function Navbar() {
                     <Image src="/default_bird.png" alt="user" width={50} height={50} />
                   </div>
                   <div className="sidebar-user-details">
-                    <div className="sidebar-user-name">{userName || "User Name"}</div>
-                    <div className="sidebar-user-coin">보유 코인: {userLunch}런치</div>
+                    <div className="sidebar-user-name">{user?.name || "User Name"}</div>
+                    {/* <div className="sidebar-user-coin">보유 코인: 100런치</div> */}
+                    <div className="sidebar-user-coin">보유 코인: {coins}런치</div>
                   </div>
                 </div>
               </div>
@@ -122,7 +126,8 @@ export default function Navbar() {
                     onClick={() => {
                       // 로그아웃 처리 (쿠키 삭제 등 필요시 추가)
                       setIsLogIn(false);
-                      localStorage.removeItem('userName');
+                      localStorage.removeItem('user');
+                      setUser(null);
                       setOpen(false);
                       alert("로그아웃되었습니다");
                       router.push("/");
