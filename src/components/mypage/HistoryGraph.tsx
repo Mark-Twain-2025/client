@@ -73,7 +73,8 @@ export default function HistoryGraph() {
   const [his, setHis] = useState<{ myLunchHistory: number[] } | null>(null);
 
   useEffect(() => {
-    const user_id = Number(localStorage.getItem("user_id"));
+    const user_id = Number(localStorage.getItem("userId"));
+    console.log(user_id);
     if (user_id) {
       fetchInvestHis(user_id).then((data) => {
         setHis(data);
