@@ -58,7 +58,7 @@ export default function RankingPage() {
                   alignItems: "center",
                   backgroundColor: "#f8f9fa",
                   color: "#888",
-                  fontSize: "1.5rem",
+                  fontSize: "1.2rem",
                   borderRadius: "12px",
                 }}
               >
