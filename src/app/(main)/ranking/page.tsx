@@ -43,7 +43,9 @@ export default function RankingPage() {
               minHeight: "300px",
             }}
           >
-            {isWeeklyVisible ? (
+            <WeeklyTop />
+            <WeeklyRank />
+            {/* {isWeeklyVisible ? (
               <>
                 <WeeklyTop />
                 <WeeklyRank />
@@ -63,8 +65,8 @@ export default function RankingPage() {
                 }}
               >
                 주간 랭킹은 금요일 오후에 공개됩니다!
-              </div>
-            )}
+              </div> */}
+            {/* )} */}
           </div>
         </Tab>
       </Tabs>
