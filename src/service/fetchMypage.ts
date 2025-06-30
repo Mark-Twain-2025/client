@@ -1,16 +1,17 @@
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || "";
 export async function fetchAttendance(userId: number) {
-  const res = await fetch(`http://localhost:3001/api/attendance/${userId}`);
+  const res = await fetch(`${API_PREFIX}/attendance/${userId}`);
   return await res.json();
 }
 
 export async function fetchQuizHis(userId: number) {
-  const res = await fetch(`http://localhost:3001/api/quizHistory/${userId}`);
+  const res = await fetch(`${API_PREFIX}/quizHistory/${userId}`);
   return await res.json();
 }
 
 export async function fetchInvestHis(userId: number) {
   const res = await fetch(
-    `http://localhost:3001/api/investments/history/${userId}`
+    `${API_PREFIX}/investments/history/${userId}`
   );
   return await res.json();
 }
