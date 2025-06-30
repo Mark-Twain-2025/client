@@ -10,8 +10,6 @@ export async function fetchQuizHis(userId: number) {
 }
 
 export async function fetchInvestHis(userId: number) {
-  const res = await fetch(
-    `${API_PREFIX}/investments/history/${userId}`
-  );
+  const res = await fetch(`${API_PREFIX}/investments/history/${userId}`);
   return await res.json();
 }

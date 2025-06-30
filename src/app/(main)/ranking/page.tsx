@@ -1,7 +1,7 @@
 "use client";
-import DailyRank from "@/components/ranking/DailyRank";
-import WeeklyRank from "@/components/ranking/WeeklyRank";
-import WeeklyTop from "@/components/ranking/WeeklyTop";
+import DailyRank from "@/components/Ranking/DailyRank";
+import WeeklyRank from "@/components/Ranking/WeeklyRank";
+import WeeklyTop from "@/components/Ranking/WeeklyTop";
 import React, { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 

@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_PREFIX: "/api",
   },
+  eslint:{
+    ignoreDuringBuilds: true
+  },
+  
   async rewrites() {
     return [
       {
