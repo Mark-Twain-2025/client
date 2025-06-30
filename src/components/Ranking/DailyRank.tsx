@@ -7,44 +7,54 @@ import getTodayStr from "@/utils/date";
 export default function DailyRank() {
   const [data, setData] = useState([]);
 
-  // 원래이거
   // const today = getTodayStr();
-
-  //테스트용
-  const today = "2025-06-27";
+  const today = "2025-06-27"; // 테스트용
 
   useEffect(() => {
     fetchDailyRank(today).then((data) => {
-      setData(data.ranking);
+      setData(data?.ranking ?? []);
     });
   }, []);
 
-  console.log(data);
-
   return (
     <div style={{ margin: "2rem", width: "40rem", textAlign: "center" }}>
-      <Table>
-        <thead>
-          <tr>
-            <th>순위</th>
-            <th>이름</th>
-            <th>보유 런치</th>
-            <th>수익률</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((data) => {
-            return (
+      {data.length === 0 ? (
+        <div
+          style={{
+            height: "200px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#f8f9fa",
+            borderRadius: "12px",
+            fontSize: "1.2rem",
+            color: "#888",
+          }}
+        >
+          아직 랭킹 정보가 없습니다.
+        </div>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <th>순위</th>
+              <th>이름</th>
+              <th>보유 런치</th>
+              <th>수익률</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((data) => (
               <tr key={data.user_id}>
                 <td>{data.rank}</td>
                 <td>{data.name}</td>
                 <td>{data.todayLunch}</td>
                 <td>{data.returnRate}%</td>
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </div>
   );
 }

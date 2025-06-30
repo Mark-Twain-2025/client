@@ -38,7 +38,7 @@ export default function HistoryList() {
         alignContent: "center",
       }}
     >
-      <h4>투자 히스토리</h4>
+      <h4 className="pb-2">투자 히스토리</h4>
       <Table style={{ textAlign: "center" }}>
         <thead>
           <tr>
