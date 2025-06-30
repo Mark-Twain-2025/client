@@ -16,7 +16,7 @@ export default function HistoryList() {
   const [history, setHistory] = useState<InvestmentEntry[]>([]);
 
   useEffect(() => {
-    const user_id = Number(localStorage.getItem("user_id"));
+    const user_id = Number(localStorage.getItem("userId"));
     if (user_id) {
       fetchInvestHis(user_id).then((data) => {
         if (data && Array.isArray(data.investmentHistory)) {
