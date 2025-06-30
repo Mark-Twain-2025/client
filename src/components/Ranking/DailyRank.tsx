@@ -16,7 +16,7 @@ export default function DailyRank() {
   const [data, setData] = useState<RankUser[]>([]);
 
   const today = getTodayStr();
-  // const today = "2025-06-27"; // 테스트용
+  // const today = "2025-07-03"; // 테스트용
 
   useEffect(() => {
     fetchDailyRank(today).then((data) => {
@@ -25,7 +25,7 @@ export default function DailyRank() {
   }, []);
 
   return (
-    <div style={{ margin: "2rem", width: "40rem", textAlign: "center" }}>
+    <div style={{ margin: "2rem", width: "50rem", textAlign: "center" }}>
       {data.length === 0 ? (
         <div
           style={{

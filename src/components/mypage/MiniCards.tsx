@@ -2,16 +2,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchAttendance } from "@/service/fetchMypage";
 
-// const user_id = localStorage.getItem("user_id");
-// const userLunch = localStorage.getItem("user_lunch");
-
 export default function MiniCards() {
   const [user_id, setUser_id] = useState<number | null>(null);
   const [userLunch, setUserLunch] = useState<number>(0);
 
   useEffect(() => {
-    const idStr = localStorage.getItem("user_id");
-    const lunchStr = localStorage.getItem("user_lunch");
+    const idStr = localStorage.getItem("userId");
+    const lunchStr = localStorage.getItem("userLunch");
 
     const id = idStr ? parseInt(idStr, 10) : null;
     const lunch = lunchStr ? parseInt(lunchStr, 10) : 0;
@@ -67,12 +64,12 @@ function CurLunch({ userLunch }: { userLunch: number }) {
 function AttendStreak({ user_id }: { user_id: number | null }) {
   const [attendance, setAttendance] = useState([]);
   useEffect(() => {
-    if (user_id) {
+    if (user_id !== null) {
       fetchAttendance(user_id).then((data) => {
         setAttendance(data.dates);
       });
     }
-  }, []);
+  }, [user_id]);
 
   return (
     <div
