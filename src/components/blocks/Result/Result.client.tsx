@@ -8,6 +8,7 @@ import {
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -40,6 +41,7 @@ export default function ResultClient() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -89,7 +91,7 @@ export default function ResultClient() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #f6f8fb 60%, #fffbe6 100%)",
+        background: "#fff",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -199,6 +201,35 @@ export default function ResultClient() {
             아직 정산이 완료되지 않아 투자금을 받을 수 없습니다.
           </div>
         )}
+        <button
+          style={{
+            marginTop: "2.5rem",
+            width: "100%",
+            maxWidth: 320,
+            fontSize: "1.13rem",
+            fontWeight: 700,
+            borderRadius: "2rem",
+            background: "#ffa500",
+            color: "#fff",
+            border: "none",
+            boxShadow: "0 2px 8px rgba(255,165,0,0.08)",
+            letterSpacing: 1,
+            padding: "1rem 0",
+            cursor: "pointer",
+            transition: "background 0.2s, color 0.2s, border 0.2s",
+          }}
+          onMouseOver={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#ffe0a3";
+            (e.currentTarget as HTMLButtonElement).style.color = "#ffa500";
+          }}
+          onMouseOut={e => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#ffa500";
+            (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+          }}
+          onClick={() => router.push("/")}
+        >
+          홈으로 가기
+        </button>
       </div>
     </div>
   );
