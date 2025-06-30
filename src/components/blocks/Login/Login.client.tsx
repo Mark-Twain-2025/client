@@ -65,7 +65,7 @@ export default function LoginClientPage() {
 				console.log(data);
 
 				if (data.user && data.user.name) {
-					const userInfoRes=  await fetch(`/api/user_info/${data.user.user_id}`, {
+					const userInfoRes=  await fetch(`${API_PREFIX}/user_info/${data.user.user_id}`, {
 						method: 'GET',
 						headers: {
 							'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ export async function getTodayVoteBefore(userId: string, date: string): Promise<
   return data && data.length > 0 ? data[0] : null;
 }
 
-// 카테고리만 수정 (PATCH)
+// 카테고리만 수정 (PATCH) - investments도 함께 업데이트
 export async function patchVoteBeforeCategory(voteId: string, category_id: string): Promise<any> {
   const res = await fetch(`${API_PREFIX}/vote_before/${voteId}`, {
     method: "PATCH",
@@ -34,6 +34,17 @@ export async function patchVoteBeforeCategory(voteId: string, category_id: strin
     body: JSON.stringify({ category_id }),
   });
   if (!res.ok) throw new Error("투표 수정 실패");
+  return await res.json();
+}
+
+// investments 카테고리 업데이트 함수 추가
+export async function updateInvestmentCategory(userId: string, date: string, category_id: string): Promise<any> {
+  const res = await fetch(`${API_PREFIX}/investments/${userId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date, category_id }),
+  });
+  if (!res.ok) throw new Error("투자 정보 수정 실패");
   return await res.json();
 }
 
