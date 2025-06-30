@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/components/auth/Auth";
+import { useRouter } from "next/navigation";
 
-const LUNCH_KEY = "user_lunch";
-const QUIZ_DATE_KEY = "quiz_date";
-const ANSWER_KEY = "quiz_answer";
-const QUIZ_DATA_KEY = "quiz_data"; // 오늘 푼 퀴즈 데이터 저장용
+const API_PREFIX = process.env.NEXT_PUBLIC_API_PREFIX || "";
 
 interface QuizData {
+  _id: string;
   id: number;
   question: string;
   choices: string[];
@@ -15,93 +15,145 @@ interface QuizData {
   explanation: string;
 }
 
-export default function Quiz({
-  lunch,
-  setLunch,
-}: {
-  lunch?: number;
-  setLunch?: (n: number) => void;
-}) {
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [answered, setAnswered] = useState(false);
-  const [, setShowExplanation] = useState(false);
-  const [quizDone, setQuizDone] = useState(false);
-  const [userLunch, setUserLunch] = useState<number>(lunch ?? 1000);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const [invalidState, setInvalidState] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState<QuizData | null>(null);
-  const [loading, setLoading] = useState(true);
+interface QuizResult {
+  isCorrect: boolean;
+  explanation: string;
+  reward: number;
+  updatedCoins?: number;
+}
 
-  // 서버에서 랜덤 퀴즈 가져오기
+export default function Quiz() {
+  const { isLogIn } = useAuth();
+  const router = useRouter();
+  const [quiz, setQuiz] = useState<QuizData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [answered, setAnswered] = useState(false);
+  const alertShown = useRef(false);
+
   useEffect(() => {
-    const fetchRandomQuiz = async () => {
+    if (isLogIn === false && !alertShown.current) {
+      alertShown.current = true;
+      const goLogin = window.confirm(
+        "로그인 후 이용가능합니다! 로그인 페이지로 이동하시겠습니까?"
+      );
+      if (goLogin) {
+        router.push("/login");
+      }
+    }
+  }, [isLogIn, router]);
+
+  useEffect(() => {
+    if (isLogIn !== true) return;
+
+    // 오늘 이미 퀴즈를 풀었는지 확인
+    const today = new Date().toISOString().slice(0, 10);
+    const lastQuizDate = localStorage.getItem("quiz_date");
+    const lastQuizAnswer = localStorage.getItem("quiz_answer");
+    const lastQuizData = localStorage.getItem("quiz_data");
+
+    if (lastQuizDate === today && lastQuizAnswer !== null && lastQuizData) {
       try {
-        const response = await fetch("http://localhost:3001/quiz/random");
-        if (response.ok) {
-          const quizData = await response.json();
-          setCurrentQuestion(quizData);
-          // 오늘 푼 퀴즈 데이터를 localStorage에 저장
-          localStorage.setItem(QUIZ_DATA_KEY, JSON.stringify(quizData));
-        } else {
-          console.error("퀴즈를 가져오는데 실패했습니다.");
-        }
+        const quizData = JSON.parse(lastQuizData);
+        const answer = parseInt(lastQuizAnswer);
+        const isCorrect = answer === quizData.answer_index;
+
+        setQuiz(quizData);
+        setSelectedAnswer(answer);
+        setAnswered(true);
+        setQuizResult({
+          isCorrect: isCorrect,
+          explanation: quizData.explanation,
+          reward: isCorrect ? 30 : 0,
+        });
+        setLoading(false);
+        return;
       } catch (error) {
-        console.error("퀴즈 요청 중 오류:", error);
+        console.error("저장된 퀴즈 데이터 파싱 오류:", error);
+      }
+    }
+
+    const fetchQuiz = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`${API_PREFIX}/quiz/random`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("퀴즈를 불러오지 못했습니다.");
+        const data = await res.json();
+        setQuiz(data);
+        // 퀴즈 데이터를 localStorage에 저장
+        localStorage.setItem("quiz_data", JSON.stringify(data));
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error ? err.message : "에러가 발생했습니다.";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
+    fetchQuiz();
+  }, [isLogIn]);
 
-    const today = new Date().toISOString().slice(0, 10);
-    const lastQuizDate = localStorage.getItem(QUIZ_DATE_KEY);
-    const savedQuizData = localStorage.getItem(QUIZ_DATA_KEY);
+  const handleAnswerSelect = (answerIndex: number) => {
+    if (answered || submitting) return;
+    setSelectedAnswer(answerIndex);
+  };
 
-    // 오늘 이미 퀴즈를 풀었다면 저장된 퀴즈 데이터 사용
-    if (lastQuizDate === today && savedQuizData) {
-      try {
-        const quizData = JSON.parse(savedQuizData);
-        setCurrentQuestion(quizData);
-        setLoading(false);
-      } catch (error) {
-        console.error("저장된 퀴즈 데이터 파싱 오류:", error);
-        // 파싱 오류 시 새로운 퀴즈 가져오기
-        fetchRandomQuiz();
-      }
-    } else {
-      // 새로운 날짜이거나 저장된 데이터가 없으면 새로운 퀴즈 가져오기
-      fetchRandomQuiz();
-    }
-  }, []);
+  const handleSubmitAnswer = async () => {
+    if (selectedAnswer === null || submitting || !quiz) return;
 
-  useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const lastQuizDate = localStorage.getItem(QUIZ_DATE_KEY);
-    const savedAnswer = localStorage.getItem(ANSWER_KEY);
-    if (lastQuizDate === today) {
-      if (savedAnswer !== null) {
-        setQuizDone(true);
+    setSubmitting(true);
+    try {
+      const response = await fetch(`${API_PREFIX}/quiz/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          selectedIndex: selectedAnswer,
+          quizId: quiz.id,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setQuizResult(result);
         setAnswered(true);
-        setSelectedAnswer(Number(savedAnswer));
-        setShowExplanation(true);
-        const storedLunch = localStorage.getItem(LUNCH_KEY);
-        if (storedLunch) setUserLunch(Number(storedLunch));
-        // currentQuestion이 로드된 후에 정답 여부 확인
-        if (currentQuestion) {
-          setIsCorrect(Number(savedAnswer) === currentQuestion.answer_index);
-        }
+
+        // 오늘 날짜와 답안을 localStorage에 저장
+        const today = new Date().toISOString().slice(0, 10);
+        localStorage.setItem("quiz_date", today);
+        localStorage.setItem("quiz_answer", selectedAnswer.toString());
       } else {
-        // 날짜는 있는데 답안이 없음(비정상 상태)
-        setInvalidState(true);
+        const errorData = await response.json();
+        if (errorData.error === "오늘 이미 퀴즈를 풀었습니다.") {
+          alert("오늘 이미 퀴즈를 풀었습니다. 내일 다시 도전해보세요!");
+        } else {
+          alert(`퀴즈 실패: ${errorData.error}`);
+        }
       }
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "퀴즈 제출 중 오류가 발생했습니다.";
+      alert(errorMessage);
+    } finally {
+      setSubmitting(false);
     }
-  }, [currentQuestion]);
+  };
 
-  useEffect(() => {
-    if (lunch !== undefined) setUserLunch(lunch);
-  }, [lunch]);
+  if (isLogIn === false) {
+    return null;
+  }
 
-  // currentQuestion이 로드되지 않았거나 로딩 중일 때
-  if (loading || !currentQuestion) {
+  if (loading) {
     return (
       <div style={styles.container}>
         <div style={styles.quizCard}>
@@ -111,78 +163,57 @@ export default function Quiz({
     );
   }
 
-  const handleAnswerSelect = (answerIndex: number) => {
-    if (answered) return;
-    setSelectedAnswer(answerIndex);
-  };
-
-  const handleSubmitAnswer = () => {
-    if (selectedAnswer === null) return;
-    const correct = selectedAnswer === currentQuestion.answer_index;
-    setIsCorrect(correct);
-    setAnswered(true);
-    setShowExplanation(true);
-    // 오늘 날짜로 응시 기록 저장
-    const today = new Date().toISOString().slice(0, 10);
-    localStorage.setItem(QUIZ_DATE_KEY, today);
-    localStorage.setItem(ANSWER_KEY, String(selectedAnswer)); // 답안 저장 복원
-    setQuizDone(true);
-    // 정답 시 런치 지급
-    if (correct) {
-      const newLunch = userLunch + 30;
-      setUserLunch(newLunch);
-      localStorage.setItem(LUNCH_KEY, String(newLunch));
-      if (setLunch) setLunch(newLunch);
-    }
-  };
-
-  // 비정상 상태 안내
-  if (invalidState) {
+  if (error) {
     return (
       <div style={styles.container}>
         <div style={styles.quizCard}>
-          <h1 style={styles.title}>오류가 발생했습니다</h1>
-          <p style={styles.message}>
-            퀴즈 기록이 올바르지 않습니다. 브라우저 저장소를 삭제하거나 새로고침
-            해보세요.
-          </p>
+          <h1 style={styles.title}>에러 발생</h1>
+          <p style={styles.message}>{error}</p>
         </div>
       </div>
     );
   }
 
-  // 복습 화면
-  if (quizDone && answered) {
+  if (!quiz) {
     return (
       <div style={styles.container}>
         <div style={styles.quizCard}>
-          <h1 style={styles.title}>오늘의 퀴즈 복습</h1>
+          <h1 style={styles.title}>퀴즈가 없습니다.</h1>
+        </div>
+      </div>
+    );
+  }
+
+  // 퀴즈 결과 화면
+  if (answered && quizResult) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.quizCard}>
+          <h1 style={styles.title}>퀴즈 결과</h1>
           <div style={styles.questionContainer}>
-            <h2 style={styles.question}>{currentQuestion.question}</h2>
+            <h2 style={styles.question}>{quiz.question}</h2>
             <div style={styles.optionsContainer}>
-              {currentQuestion.choices.map((option, index) => {
+              {quiz.choices.map((option, index) => {
                 let optionStyle = { ...styles.option };
-                if (selectedAnswer === index)
+                if (selectedAnswer === index) {
                   optionStyle = { ...optionStyle, ...styles.selectedOption };
-                if (index === currentQuestion.answer_index)
-                  optionStyle = { ...optionStyle, ...styles.correctOption };
-                if (
-                  selectedAnswer === index &&
-                  index !== currentQuestion.answer_index
-                )
-                  optionStyle = { ...optionStyle, ...styles.wrongOption };
-                // 오른쪽 텍스트 표시
-                let rightLabel = "";
-                if (
-                  selectedAnswer === index &&
-                  index === currentQuestion.answer_index
-                ) {
-                  rightLabel = "내가 고른 답 · 정답";
-                } else if (selectedAnswer === index) {
-                  rightLabel = "내가 고른 답";
-                } else if (index === currentQuestion.answer_index) {
-                  rightLabel = "정답";
                 }
+                if (index === quiz.answer_index) {
+                  optionStyle = { ...optionStyle, ...styles.correctOption };
+                }
+                if (selectedAnswer === index && index !== quiz.answer_index) {
+                  optionStyle = { ...optionStyle, ...styles.wrongOption };
+                }
+
+                let label = "";
+                if (selectedAnswer === index && index === quiz.answer_index) {
+                  label = "내가 고른 답 · 정답";
+                } else if (selectedAnswer === index) {
+                  label = "내가 고른 답";
+                } else if (index === quiz.answer_index) {
+                  label = "정답";
+                }
+
                 return (
                   <button
                     key={index}
@@ -197,40 +228,30 @@ export default function Quiz({
                     <span>
                       {String.fromCharCode(65 + index)}. {option}
                     </span>
-                    {rightLabel && (
-                      <span
-                        style={{
-                          color: "#007bff",
-                          fontWeight: 600,
-                          fontSize: 14,
-                          marginLeft: 12,
-                        }}
-                      >
-                        {rightLabel}
-                      </span>
-                    )}
+                    {label && <span style={styles.answerLabel}>{label}</span>}
                   </button>
                 );
               })}
             </div>
             <div style={styles.explanation}>
               <h3 style={styles.explanationTitle}>
-                {isCorrect ? <>정답입니다!</> : "틀렸습니다!"}
+                {quizResult.isCorrect ? "정답입니다! 🎉" : "틀렸습니다! 😢"}
               </h3>
-              <p style={styles.explanationText}>
-                {currentQuestion.explanation}
-              </p>
+              <p style={styles.explanationText}>{quizResult.explanation}</p>
             </div>
-            <div style={{ fontSize: 20, fontWeight: 600, marginTop: 24 }}>
-              <span style={{ color: "#FFA500", fontWeight: 700 }}>
-                +30 런치
-              </span>{" "}
-              지급!
-              <br />
-              현재 보유 런치:{" "}
-              <span style={{ color: "#007bff" }}>{userLunch} 런치</span>
-            </div>
-            <p style={styles.message}>내일 다시 도전해보세요.</p>
+            {quizResult.isCorrect && (
+              <div style={styles.reward}>
+                <span style={styles.rewardText}>
+                  +{quizResult.reward} 코인 지급!
+                </span>
+                {quizResult.updatedCoins && (
+                  <div style={styles.currentCoins}>
+                    현재 보유 코인: {quizResult.updatedCoins} 코인
+                  </div>
+                )}
+              </div>
+            )}
+            <p style={styles.message}>내일 다시 도전해보세요!</p>
           </div>
         </div>
       </div>
@@ -241,67 +262,23 @@ export default function Quiz({
   return (
     <div style={styles.container}>
       <div style={styles.quizCard}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>금융 퀴즈</h1>
-        </div>
+        <h1 style={styles.title}>금융 퀴즈</h1>
         <div style={styles.questionContainer}>
-          <h2 style={styles.question}>{currentQuestion.question}</h2>
+          <h2 style={styles.question}>{quiz.question}</h2>
           <div style={styles.optionsContainer}>
-            {currentQuestion.choices.map((option, index) => {
-              let optionStyle = { ...styles.option };
-              if (selectedAnswer === index)
-                optionStyle = { ...optionStyle, ...styles.selectedOption };
-              if (answered && index === currentQuestion.answer_index)
-                optionStyle = { ...optionStyle, ...styles.correctOption };
-              if (
-                answered &&
-                selectedAnswer === index &&
-                index !== currentQuestion.answer_index
-              )
-                optionStyle = { ...optionStyle, ...styles.wrongOption };
-              // 오른쪽 텍스트 표시
-              let rightLabel = "";
-              if (
-                answered &&
-                selectedAnswer === index &&
-                index === currentQuestion.answer_index
-              ) {
-                rightLabel = "내가 고른 답 · 정답";
-              } else if (answered && selectedAnswer === index) {
-                rightLabel = "내가 고른 답";
-              } else if (answered && index === currentQuestion.answer_index) {
-                rightLabel = "정답";
-              }
-              return (
-                <button
-                  key={index}
-                  style={{
-                    ...optionStyle,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                  onClick={() => handleAnswerSelect(index)}
-                  disabled={answered}
-                >
-                  <span>
-                    {String.fromCharCode(65 + index)}. {option}
-                  </span>
-                  {rightLabel && (
-                    <span
-                      style={{
-                        color: "#007bff",
-                        fontWeight: 600,
-                        fontSize: 14,
-                        marginLeft: 12,
-                      }}
-                    >
-                      {rightLabel}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+            {quiz.choices.map((option, index) => (
+              <button
+                key={index}
+                style={{
+                  ...styles.option,
+                  ...(selectedAnswer === index && styles.selectedOption),
+                }}
+                onClick={() => handleAnswerSelect(index)}
+                disabled={submitting}
+              >
+                {String.fromCharCode(65 + index)}. {option}
+              </button>
+            ))}
           </div>
           <div style={styles.buttonContainer}>
             <button
@@ -310,9 +287,9 @@ export default function Quiz({
                 ...(selectedAnswer === null && styles.disabledButton),
               }}
               onClick={handleSubmitAnswer}
-              disabled={selectedAnswer === null || answered}
+              disabled={selectedAnswer === null || submitting}
             >
-              답안 제출
+              {submitting ? "제출 중..." : "답안 제출"}
             </button>
           </div>
         </div>
@@ -428,5 +405,35 @@ const styles: { [key: string]: React.CSSProperties } = {
   disabledButton: {
     backgroundColor: "#ccc",
     cursor: "not-allowed",
+  },
+  message: {
+    fontSize: "16px",
+    color: "#888",
+    marginTop: "16px",
+    textAlign: "center",
+  },
+  answerLabel: {
+    fontSize: "12px",
+    fontWeight: "500",
+    color: "#888",
+    marginLeft: "8px",
+  },
+  reward: {
+    padding: "12px 20px",
+    backgroundColor: "#f8f9fa",
+    borderRadius: "12px",
+    border: "1px solid #e9ecef",
+    marginTop: "16px",
+  },
+  rewardText: {
+    fontSize: "16px",
+    fontWeight: "600",
+    color: "#28a745",
+  },
+  currentCoins: {
+    fontSize: "14px",
+    color: "#888",
+    marginTop: "8px",
+    textAlign: "center",
   },
 };
