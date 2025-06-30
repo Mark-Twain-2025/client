@@ -1,25 +1,65 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { fetchWeeklyRank } from "@/service/fetchResult";
-import getTodayStr from "@/utils/date";
+import dayjs from "dayjs";
 
 const avatarUrl = [2, 1, 3];
 
 export default function WeeklyTop() {
   const [users, setUsers] = useState([]);
-  const today = getTodayStr();
-
-  const week = today === "2025-06-27" ? 1 : 2;
+  const [week, setWeek] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchWeeklyRank(week).then((data) => {
-      const top3 = data?.ranking?.slice(0, 3) ?? [];
-      const reordered = top3.length === 3 ? [top3[1], top3[0], top3[2]] : top3;
-      setUsers(reordered);
-    });
+    const now = dayjs();
+    const openTime1 = dayjs("2025-07-04T14:00:00");
+    const openTime2 = dayjs("2025-07-11T14:00:00");
+
+    if (now.isBefore(openTime1)) {
+      setWeek(null); // 비공개 상태
+    } else if (now.isBefore(openTime2)) {
+      setWeek(1); // 1주차 공개
+    } else {
+      setWeek(2); // 2주차 공개
+    }
   }, []);
 
-  // rankValue 방어 (undefined → 0 처리)
+  useEffect(() => {
+    if (week !== null) {
+      fetchWeeklyRank(week).then((data) => {
+        const top3 = data?.ranking?.slice(0, 3) ?? [];
+        const reordered =
+          top3.length === 3 ? [top3[1], top3[0], top3[2]] : top3;
+        setUsers(reordered);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [week]);
+
+  if (loading) {
+    return (
+      <div className="text-center py-10 text-gray-500">불러오는 중...</div>
+    );
+  }
+
+  if (week === null) {
+    return (
+      <div className="text-center py-10 text-gray-500">
+        주간 TOP 3는 7월 4일 오후 2시에 공개됩니다.
+      </div>
+    );
+  }
+
+  if (users.length === 0) {
+    return (
+      <div className="text-center py-10 text-gray-400">
+        아직 TOP 3 데이터가 없습니다.
+      </div>
+    );
+  }
+
   const maxProfit = Math.max(...users.map((user) => user.rankValue ?? 0));
 
   return (
