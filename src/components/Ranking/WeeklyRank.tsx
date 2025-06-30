@@ -16,11 +16,11 @@ export default function WeeklyRank() {
     const openTime2 = dayjs("2025-07-11T14:00:00");
 
     if (now.isBefore(openTime1)) {
-      setWeek(null); // 공개 전
+      setWeek(null);
     } else if (now.isBefore(openTime2)) {
-      setWeek(1); // 1주차 공개
+      setWeek(1);
     } else {
-      setWeek(2); // 2주차 공개
+      setWeek(2);
     }
   }, []);
 
@@ -50,26 +50,40 @@ export default function WeeklyRank() {
       ) : data.length === 0 ? (
         <p style={{ color: "#aaa" }}>랭킹 데이터가 없습니다.</p>
       ) : (
-        <Table style={{ width: "28rem", margin: "0 auto" }}>
-          <thead>
-            <tr>
-              <th>순위</th>
-              <th>이름</th>
-              <th>주간 수익</th>
-              <th>수익률</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item) => (
-              <tr key={item.user_id}>
-                <td>{item.rank}</td>
-                <td>{item.name}</td>
-                <td>{item.rankValue}</td>
-                <td>{item.returnRate}%</td>
+        <div
+          style={{
+            width: "28rem",
+            maxHeight: "320px",
+            overflowY: "auto",
+            margin: "0 auto",
+            border: "1px solid #dee2e6",
+            borderRadius: "0.5rem",
+          }}
+        >
+          <Table hover style={{ margin: 0 }}>
+            <thead
+              className="sticky-top"
+              style={{ backgroundColor: "#f8f9fa" }}
+            >
+              <tr>
+                <th>순위</th>
+                <th>이름</th>
+                <th>주간 수익</th>
+                <th>수익률</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {data.map((item) => (
+                <tr key={item.user_id}>
+                  <td>{item.rank}</td>
+                  <td>{item.name}</td>
+                  <td>{item.rankValue}</td>
+                  <td>{item.returnRate}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
     </div>
   );
