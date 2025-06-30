@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/components/auth/Auth";
+import { fetchUserCoins } from "@/service/vote";
 
 const menuItems = [
   { label: "Home", icon: "/Nav_home.svg", href: "/" },
@@ -17,9 +18,20 @@ const menuItems = [
 export default function Navbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [coins, setCoins] = useState(0);
+  const pathname = usePathname();
 
   // const { isLogIn, setIsLogIn, userName } = useAuth();
   const { isLogIn, setIsLogIn, user, setUser } = useAuth();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return;
+    fetchUserCoins(userId).then((c) => {
+      console.log('코인 fetch됨:', c);
+      setCoins(c);
+    });
+  }, [pathname]); // 경로가 바뀔 때마다 fetch
 
   return (
     <>
@@ -61,7 +73,7 @@ export default function Navbar() {
                   <div className="sidebar-user-details">
                     <div className="sidebar-user-name">{user?.name || "User Name"}</div>
                     {/* <div className="sidebar-user-coin">보유 코인: 100런치</div> */}
-                    <div className="sidebar-user-coin">보유 코인: {user?.coin || 0}런치</div>
+                    <div className="sidebar-user-coin">보유 코인: {coins}런치</div>
                   </div>
                 </div>
               </div>
