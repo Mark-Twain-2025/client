@@ -2,20 +2,33 @@
 import React, { useEffect, useState } from "react";
 import { fetchAttendance } from "@/service/fetchMypage";
 
-const user_id = localStorage.getItem("user_id");
-const userLunch = localStorage.getItem("user_lunch");
+// const user_id = localStorage.getItem("user_id");
+// const userLunch = localStorage.getItem("user_lunch");
 
 export default function MiniCards() {
+  const [user_id, setUser_id] = useState<number | null>(null);
+  const [userLunch, setUserLunch] = useState<number>(0);
+
+  useEffect(() => {
+    const idStr = localStorage.getItem("user_id");
+    const lunchStr = localStorage.getItem("user_lunch");
+
+    const id = idStr ? parseInt(idStr, 10) : null;
+    const lunch = lunchStr ? parseInt(lunchStr, 10) : 0;
+    setUser_id(id);
+    setUserLunch(lunch);
+  }, []);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <CurLunch />
-      <AttendStreak />
-      <TotalProfit />
+      <CurLunch userLunch={userLunch} />
+      <AttendStreak user_id={user_id} />
+      <TotalProfit userLunch={userLunch} />
     </div>
   );
 }
 
-function CurLunch() {
+function CurLunch({ userLunch }: { userLunch: number }) {
   return (
     <div
       className="bg-white rounded-2xl p-6 border border-yellow-100 transition-all duration-300 cursor-pointer"
@@ -51,11 +64,11 @@ function CurLunch() {
   );
 }
 
-function AttendStreak() {
+function AttendStreak({ user_id }: { user_id: number | null }) {
   const [attendance, setAttendance] = useState([]);
   useEffect(() => {
     if (user_id) {
-      fetchAttendance(parseInt(user_id)).then((data) => {
+      fetchAttendance(user_id).then((data) => {
         setAttendance(data.dates);
       });
     }
@@ -96,8 +109,8 @@ function AttendStreak() {
   );
 }
 
-function TotalProfit() {
-  const profit = parseInt(userLunch || "0") - 1000;
+function TotalProfit({ userLunch }: { userLunch: number }) {
+  const profit = userLunch - 1000;
 
   return (
     <div
