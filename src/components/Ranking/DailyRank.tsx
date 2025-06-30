@@ -4,8 +4,16 @@ import { useEffect, useState } from "react";
 import { fetchDailyRank } from "@/service/fetchResult";
 import getTodayStr from "@/utils/date";
 
+type RankUser = {
+  user_id: number;
+  rank: number;
+  name: string;
+  todayLunch: number;
+  returnRate: number;
+};
+
 export default function DailyRank() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<RankUser[]>([]);
 
   const today = getTodayStr();
   // const today = "2025-06-27"; // 테스트용

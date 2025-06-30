@@ -4,8 +4,16 @@ import Table from "react-bootstrap/Table";
 import { fetchWeeklyRank } from "@/service/fetchResult";
 import dayjs from "dayjs";
 
+type RankUser = {
+  user_id: number;
+  rank: number;
+  name: string;
+  rankValue: number;
+  returnRate: number;
+};
+
 export default function WeeklyRank() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<RankUser[]>([]);
   const [week, setWeek] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
