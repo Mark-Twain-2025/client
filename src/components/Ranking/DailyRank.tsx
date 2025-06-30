@@ -7,8 +7,8 @@ import getTodayStr from "@/utils/date";
 export default function DailyRank() {
   const [data, setData] = useState([]);
 
-  // const today = getTodayStr();
-  const today = "2025-06-27"; // 테스트용
+  const today = getTodayStr();
+  // const today = "2025-06-27"; // 테스트용
 
   useEffect(() => {
     fetchDailyRank(today).then((data) => {

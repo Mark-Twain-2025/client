@@ -13,6 +13,7 @@ export default function WeeklyTop() {
   useEffect(() => {
     const now = dayjs();
     const openTime1 = dayjs("2025-07-04T14:00:00");
+    // const openTime1 = dayjs("2025-06-29T14:00:00");
     const openTime2 = dayjs("2025-07-11T14:00:00");
 
     if (now.isBefore(openTime1)) {
