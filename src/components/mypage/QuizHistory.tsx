@@ -1,9 +1,6 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchQuizHis } from "@/service/fetchMypage";
-
-const user_id = localStorage.getItem("user_id");
 
 interface QuizHistoryData {
   correctCount: number;
@@ -11,13 +8,14 @@ interface QuizHistoryData {
 }
 
 interface DonutChartProps {
-  value: number; // 예: 12000
-  max: number; // 예: 20000
-  size?: number; // 원의 크기(px)
+  value: number;
+  max: number;
+  size?: number;
   strokeWidth?: number;
   color?: string;
   bgColor?: string;
 }
+
 const DonutChart: React.FC<DonutChartProps> = ({
   value,
   max,
@@ -73,14 +71,21 @@ export default function QuizHistory() {
     correctCount: 0,
     totalCount: 0,
   });
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (user_id) {
-      fetchQuizHis(parseInt(user_id)).then((data) => {
+    const idStr = localStorage.getItem("user_id");
+    const id = idStr ? parseInt(idStr, 10) : null;
+    setUserId(id);
+  }, []);
+
+  useEffect(() => {
+    if (userId !== null) {
+      fetchQuizHis(userId).then((data) => {
         setHis(data);
       });
     }
-  }, []);
+  }, [userId]);
 
   return (
     <div
