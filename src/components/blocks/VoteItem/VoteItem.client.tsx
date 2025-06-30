@@ -5,7 +5,7 @@ import CardModal from "@/components/ui/CardModal";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth/Auth";
 import { useEffect } from "react";
-import { fetchUserCoins, voteBefore, getTodayVoteBefore, patchVoteBeforeCategory } from "@/service/vote";
+import { fetchUserCoins, voteBefore, getTodayVoteBefore, patchVoteBeforeCategory, updateInvestmentCategory } from "@/service/vote";
 
 const foodTypes = [
   { key: "korean", label: "한식", img: "/한식.avif" },
@@ -28,8 +28,8 @@ const VoteItemClient = ({ onVote }: VoteItemProps) => {
   const secondRow = foodTypes.slice(2, 4);
   const thirdRow = foodTypes.slice(4);
   const [popupInfo, setPopupInfo] = useState<{label: string, amount: string, isEdit?: boolean} | null>(null);
-  const { userName } = useAuth();
-  console.log("userName:", userName);
+  const { isLogIn } = useAuth();
+  console.log("isLogIn:", isLogIn);
 
   // 코인 상태 및 유저 정보 fetch
   const [coins, setCoins] = useState<number>(0);
@@ -117,7 +117,7 @@ const VoteItemClient = ({ onVote }: VoteItemProps) => {
     if (!selected) return alert("음식을 선택하세요!");
     if (!amount || investAmount < 1) return alert("1코인 이상 입력하세요!");
     if (investAmount > 1000) return alert("최대 1000코인까지만 투자할 수 있습니다!");
-    if (investAmount > coins) return alert("보유한 런치 코인보다 많이 투자할 수 없습니다!");
+    if (!editMode && investAmount > coins) return alert("보유한 런치 코인보다 많이 투자할 수 없습니다!");
     const userId = localStorage.getItem("userId");
     if (!userId) return alert("로그인 정보가 없습니다.");
     const category_id = categoryMap[selected];
@@ -129,7 +129,13 @@ const VoteItemClient = ({ onVote }: VoteItemProps) => {
           return alert("카테고리를 변경해야 수정할 수 있습니다.");
         }
         console.log("[수정모드] PATCH 요청", voteBeforeId, category_id);
+        
+        // 1. vote_before 업데이트
         await patchVoteBeforeCategory(voteBeforeId, category_id);
+        
+        // 2. investments 업데이트 (새로 추가)
+        await updateInvestmentCategory(userId, date, category_id);
+        
         setPopupInfo({
           label: foodTypes.find((f) => f.key === selected)?.label || "",
           amount: prevAmount,
@@ -251,9 +257,17 @@ setTimeout(() => {
               type="number"
               placeholder="최소 ~ 최대"
               value={amount}
-              onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))}
+              onChange={(e) => {
+                if (!editMode) {
+                  setAmount(e.target.value.replace(/[^0-9]/g, ""));
+                }
+              }}
               className={styles.amountInput}
               readOnly={editMode} // 수정모드일 때 금액 입력 불가
+              style={{ 
+                backgroundColor: editMode ? '#f5f5f5' : '#fff',
+                cursor: editMode ? 'not-allowed' : 'text'
+              }}
             />
             <button
               className={styles.voteButton}
