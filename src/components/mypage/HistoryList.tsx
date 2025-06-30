@@ -1,7 +1,34 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
+import { fetchInvestHis } from "@/service/fetchMypage";
+
+const categoryMap: Record<number, string> = {
+  1: "한식",
+  2: "일식",
+  3: "중식",
+  4: "양식",
+  5: "기타",
+};
+
+type InvestmentEntry = [string, number, number, number]; // [date, category_id, rank, actual_return]
 
 export default function HistoryList() {
+  const [history, setHistory] = useState<InvestmentEntry[]>([]);
+
+  useEffect(() => {
+    const user_id = Number(localStorage.getItem("user_id"));
+    if (user_id) {
+      fetchInvestHis(user_id).then((data) => {
+        if (data && Array.isArray(data.investmentHistory)) {
+          setHistory(data.investmentHistory);
+        } else {
+          setHistory([]);
+        }
+      });
+    }
+  }, []);
+
   return (
     <div
       style={{
@@ -22,18 +49,25 @@ export default function HistoryList() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>2025-06-26</td>
-            <td>양식</td>
-            <td>성공</td>
-            <td>200</td>
-          </tr>
-          <tr>
-            <td>2025-06-27</td>
-            <td>한식</td>
-            <td>실패</td>
-            <td>-10</td>
-          </tr>
+          {history.length > 0 ? (
+            history.map(([date, category_id, rank, actual_return]) => {
+              const category = categoryMap[category_id] || "알 수 없음";
+              const isSuccess = category_id === rank ? "성공" : "실패";
+
+              return (
+                <tr key={`${date}-${category_id}`}>
+                  <td>{date}</td>
+                  <td>{category}</td>
+                  <td>{isSuccess}</td>
+                  <td>{actual_return}</td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={4}>기록이 없습니다.</td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>

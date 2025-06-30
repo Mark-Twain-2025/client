@@ -1,4 +1,9 @@
+"use client";
 import React from "react";
+import { useEffect, useState } from "react";
+import { fetchQuizHis } from "@/service/fetchMypage";
+
+const user_id = localStorage.getItem("user_id");
 
 interface DonutChartProps {
   value: number; // 예: 12000
@@ -59,6 +64,14 @@ const DonutChart: React.FC<DonutChartProps> = ({
 };
 
 export default function QuizHistory() {
+  const [his, setHis] = useState([]);
+  useEffect(() => {
+    fetchQuizHis(user_id).then((data) => {
+      setHis(data);
+      console.log(data);
+    });
+  }, []);
+
   return (
     <div
       style={{
@@ -71,11 +84,11 @@ export default function QuizHistory() {
       <h4>퀴즈 히스토리</h4>
       <div className="grid grid-cols-[2fr_1fr]">
         <div>
-          <DonutChart value={3} max={4} />
+          <DonutChart value={his.correctCount} max={his.totalCount} />
         </div>
         <div className="align-middle">
-          <div>연속 출석</div>
-          <h3>1일</h3>
+          <div>출석</div>
+          <h3>{his.totalCount}일</h3>
         </div>
       </div>
     </div>

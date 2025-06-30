@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { fetchInvestHis } from "@/service/fetchMypage";
 
 interface CoinHistoryChartProps {
   data: number[]; // 예: [1000, 1100, 900, 1200, 1300]
@@ -6,12 +8,13 @@ interface CoinHistoryChartProps {
   height?: number;
   strokeColor?: string;
 }
+
 const CoinHistoryChart: React.FC<CoinHistoryChartProps> = ({
   data,
   strokeColor = "#f9e04c",
   height = 120,
 }) => {
-  if (data.length < 2) return null;
+  if (!Array.isArray(data) || data.length < 2) return null;
 
   const max = Math.max(...data);
   const min = Math.min(...data);
@@ -23,7 +26,6 @@ const CoinHistoryChart: React.FC<CoinHistoryChartProps> = ({
     return { x, y };
   });
 
-  // Cubic Bezier curve 경로 계산
   const getSmoothPath = (pts: { x: number; y: number }[]) => {
     const path = [`M ${pts[0].x},${pts[0].y}`];
     for (let i = 1; i < pts.length; i++) {
@@ -57,17 +59,37 @@ const CoinHistoryChart: React.FC<CoinHistoryChartProps> = ({
 };
 
 export default function HistoryGraph() {
+  const [his, setHis] = useState<{ myLunchHistory: number[] } | null>(null);
+
+  useEffect(() => {
+    const user_id = Number(localStorage.getItem("user_id"));
+    if (user_id) {
+      fetchInvestHis(user_id).then((data) => {
+        setHis(data);
+      });
+    }
+  }, []);
+
+  const hasEnoughData = his?.myLunchHistory && his.myLunchHistory.length >= 2;
+
   return (
     <div
       style={{
         padding: "2rem",
         borderRadius: "12px",
         backgroundColor: "#F4F5F7",
-        alignContent: "center",
+        // alignContent: "center",
+        // textAlign: "center",
       }}
     >
       <h4>코인 히스토리</h4>
-      <CoinHistoryChart data={[1000, 1200, 900, 1100, 1300, 1500]} />
+      {hasEnoughData ? (
+        <CoinHistoryChart data={his!.myLunchHistory} />
+      ) : (
+        <p style={{ marginTop: "2rem", color: "#999" }}>
+          코인 히스토리는 이틀차부터 표시됩니다.
+        </p>
+      )}
     </div>
   );
 }
