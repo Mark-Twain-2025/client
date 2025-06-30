@@ -5,8 +5,16 @@ import dayjs from "dayjs";
 
 const avatarUrl = [2, 1, 3];
 
+type RankUser = {
+  user_id: number;
+  name: string;
+  rank: number;
+  rankValue: number;
+  returnRate: number;
+};
+
 export default function WeeklyTop() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<RankUser[]>([]);
   const [week, setWeek] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
