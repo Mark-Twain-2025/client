@@ -107,22 +107,6 @@ export default function LoginClientPage() {
 		}
 	};
 
-        if (isFirstLoginToday()) {
-          addUserLunch(10);
-          setShowLoginModal(true);
-        } else {
-          router.push("/");
-        }
-      } else {
-        const err = await res.json();
-        alert(`로그인 실패: ${err.message}`);
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("로그인 중 오류 발생");
-    }
-  };
-
   return (
     <>
       <div className="login-bg">
