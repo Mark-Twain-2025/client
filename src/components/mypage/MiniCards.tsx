@@ -1,5 +1,9 @@
-import React from "react";
-// import { Card } from "react-bootstrap";
+"use client";
+import React, { useEffect, useState } from "react";
+import { fetchAttendance, fetchQuizHis } from "@/service/fetchMypage";
+
+const user_id = localStorage.getItem("user_id");
+const userLunch = localStorage.getItem("user_lunch");
 
 export default function MiniCards() {
   return (
@@ -22,11 +26,18 @@ function CurLunch() {
       }}
     >
       <div>보유 런치</div>
-      <h1>1000</h1>
+      <h1>{userLunch}</h1>
     </div>
   );
 }
+
 function AttendStreak() {
+  const [attendance, setAttendance] = useState([]);
+  useEffect(() => {
+    fetchAttendance(user_id).then((data) => {
+      setAttendance(data.dates);
+    });
+  }, []);
   return (
     <div
       style={{
@@ -36,8 +47,8 @@ function AttendStreak() {
         alignContent: "center",
       }}
     >
-      <div>연속 출석</div>
-      <h1>2일</h1>
+      <div>출석</div>
+      <h1>{attendance.length}일</h1>
     </div>
   );
 }
@@ -53,7 +64,7 @@ function TotalProfit() {
       }}
     >
       <div>누적 수익</div>
-      <h1>400</h1>
+      <h1>{userLunch - 1000}</h1>
     </div>
   );
 }
