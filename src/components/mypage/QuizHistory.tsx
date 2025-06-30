@@ -68,7 +68,6 @@ export default function QuizHistory() {
   useEffect(() => {
     fetchQuizHis(user_id).then((data) => {
       setHis(data);
-      console.log(data);
     });
   }, []);
 
@@ -81,7 +80,7 @@ export default function QuizHistory() {
         alignContent: "center",
       }}
     >
-      <h4>퀴즈 히스토리</h4>
+      <h4 className="pb-2">퀴즈 히스토리</h4>
       <div className="grid grid-cols-[2fr_1fr]">
         <div>
           <DonutChart value={his.correctCount} max={his.totalCount} />
