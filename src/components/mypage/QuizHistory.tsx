@@ -74,7 +74,7 @@ export default function QuizHistory() {
   const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    const idStr = localStorage.getItem("user_id");
+    const idStr = localStorage.getItem("userId");
     const id = idStr ? parseInt(idStr, 10) : null;
     setUserId(id);
   }, []);
