@@ -1,10 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { fetchAttendance } from "@/service/fetchMypage";
+import { useAuth } from "../auth/Auth";
+import { useRouter } from "next/navigation";
 
 export default function MiniCards() {
   const [user_id, setUser_id] = useState<number | null>(null);
   const [userLunch, setUserLunch] = useState<number>(0);
+
+  const { isLogIn } = useAuth();
+  const router = useRouter();
+  const alertShown = useRef(false);
+
+  useEffect(() => {
+    if (isLogIn === false && !alertShown.current) {
+      alertShown.current = true;
+      const goLogin = window.confirm(
+        "로그인 후 이용가능합니다! 로그인 페이지로 이동하시겠습니까?"
+      );
+      if (goLogin) {
+        router.push("/login");
+      }
+    }
+  }, [isLogIn, router]);
 
   useEffect(() => {
     const idStr = localStorage.getItem("userId");
