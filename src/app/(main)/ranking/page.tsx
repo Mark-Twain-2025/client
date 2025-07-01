@@ -4,7 +4,10 @@ import WeeklyRank from "@/components/Ranking/WeeklyRank";
 import WeeklyTop from "@/components/Ranking/WeeklyTop";
 import { Tab, Tabs } from "react-bootstrap";
 
+import { useEffect, useState } from "react";
+
 export default function RankingPage() {
+  const [a, setA] = useState(false);
   return (
     <div style={{ marginTop: "2rem", marginLeft: "6rem" }}>
       <h1 className="pb-3">Ranking</h1>
