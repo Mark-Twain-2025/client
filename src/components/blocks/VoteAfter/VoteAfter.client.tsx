@@ -9,10 +9,10 @@ import { useEffect } from "react";
 import {getTodayVoteAfter, voteAfter } from "@/service/vote";
 
 const foodTypes = [
-  { key: "korean", label: "한식", img: "/한식.avif" },
-  { key: "chinese", label: "일식", img: "/한식.avif" },
-  { key: "japanese", label: "중식", img: "/한식.avif" },
-  { key: "western", label: "양식", img: "/한식.avif" },
+  { key: "korean", label: "한식", img: "/한식.png" },
+  { key: "chinese", label: "일식", img: "/일식.png" },
+  { key: "japanese", label: "중식", img: "/중식.png" },
+  { key: "western", label: "양식", img: "/양식.png" },
   { key: "etc", label: "기타", img: "/한식.avif" },
 ];
 

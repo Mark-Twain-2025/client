@@ -2,6 +2,7 @@
 import DailyRank from "@/components/Ranking/DailyRank";
 import WeeklyRank from "@/components/Ranking/WeeklyRank";
 import WeeklyTop from "@/components/Ranking/WeeklyTop";
+
 import { Tab, Tabs } from "react-bootstrap";
 
 import { useEffect, useState } from "react";
